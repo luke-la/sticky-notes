@@ -1,0 +1,49 @@
+header {
+  display: grid;
+  grid-template-columns: 1fr 3fr 2fr 1fr 1fr;
+  align-items: center;
+}
+
+.note {
+  position: absolute;
+  width: 50ch;
+  padding: 1rem;
+  min-height: 200px;
+  background-color: lightblue;
+  box-shadow: 0px 0px 4px 2px #0005;
+}
+
+.note h3 {
+  display: inline-block;
+  width: 30ch;
+}
+
+.note button {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  font-size: 1.5em;
+}
+
+.note:focus-within {
+  z-index: 100;
+}
+
+.note:hover {
+  z-index: 50;
+}
+
+.note.favorite {
+  background-color: gold;
+}
+
+.drag-grip {
+  display: block;
+  height: 1.25rem;
+
+  background-color: cornflowerblue;
+}
+
+.note.favorite .drag-grip {
+  background-color: goldenrod;
+}
