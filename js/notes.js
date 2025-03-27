@@ -1,42 +1,68 @@
-let idCounter = 1;
-
 class Note {
   constructor() {
-    this.id = String(idCounter++).padStart(3, "0")
+    this.id = String(Date.now())
     this.title = ""
-    this.p = ""
+    this.content = ""
+    this.fav = false
+    this.position = {
+      x: 100,
+      y: 100,
+    }
   }
 }
 
-let notes = []
+function addNote(note = null) {
+  const noteboard = document.getElementById("noteboard")
 
-function addNote() {
-  let noteboard = document.getElementById("noteboard")
-
-  let note = new Note()
-  notes.push(note);
-
-  let template = document.getElementById("note-template")
-  let noteDiv = template.content.cloneNode(true).firstElementChild
-  noteDiv.id = "note-" + note.id
-  noteDiv.style.left = "100px"
-  noteDiv.style.top = "200px"
-  makeDraggable(noteDiv);
-  
-  let noteFavorite = noteDiv.querySelector("button[title='Favorite']")
-  noteFavorite.onclick = function () {
-    let fav = noteDiv.classList.toggle("favorite")
-    if (fav) noteFavorite.textContent = "\u2605"
-    else noteFavorite.textContent = "\u2606"
+  if (note == null) {
+    note = new Note()
+    notes.push(note)
   }
-  noteFavorite.textContent = "\u2606"
 
-  let noteOrderUp = noteDiv.querySelector("button[title='Bring to Front']")
-  noteOrderUp.onclick = function () {
+  const template = document.getElementById("note-template")
+  const noteDiv = template.content.cloneNode(true).firstElementChild
+  noteDiv.id = "note-" + note.id
+  noteDiv.style.left = note.position.x + "px"
+  noteDiv.style.top = note.position.y + "px"
+  noteboard.append(noteDiv)
+
+  const grip = noteDiv.querySelector(".drag-grip")
+  grip.onmousedown = function (e) {
+    e.preventDefault()
+
+    const lastPos = {
+      x: e.clientX,
+      y: e.clientY,
+    }
+
+    document.onmousemove = function (e) {
+      e.preventDefault()
+
+      const differenceX = lastPos.x - e.clientX
+      const differenceY = lastPos.y - e.clientY
+
+      lastPos.x = e.clientX
+      lastPos.y = e.clientY
+  
+      const newPosY = noteDiv.offsetTop - differenceY
+      noteDiv.style.top = Math.max(newPosY, 0) + "px"
+
+      const newPosX = noteDiv.offsetLeft - differenceX
+      noteDiv.style.left = Math.max(newPosX, 0) + "px"
+    }
+
+    document.onmouseup = function (e) {
+      document.onmousemove = null
+      document.onmouseup = null
+      note.position.x = noteDiv.style.left.slice(0, -2)
+      note.position.y = noteDiv.style.top.slice(0, -2)
+    }
+  }
+  grip.ondblclick = function () {
     // reorder in list
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     const newIndex = notes.length - 1
-    if (currentIndex == newIndex) return;
+    if (currentIndex == newIndex) return
     const temp = notes[newIndex]
     notes[newIndex] = notes[currentIndex]
     notes[currentIndex] = temp
@@ -45,86 +71,45 @@ function addNote() {
     document.getElementById("noteboard").append(noteDiv);
   }
 
-  let noteDiscard = noteDiv.querySelector("button[title='Discard']")
+  const noteTitle = noteDiv.querySelector("input")
+  noteTitle.value = note.title
+  noteTitle.onblur = function () {
+    const currentIndex = notes.findIndex((n) => n.id == note.id)
+    notes[currentIndex].title = noteTitle.value;
+  }
+  
+  const noteFavorite = noteDiv.querySelector("button[title='Favorite']")
+  if (note.fav) {
+    noteDiv.classList.toggle("favorite")
+    noteFavorite.textContent = "\u2605"
+  } else {
+    noteFavorite.textContent = "\u2606"
+  }
+  noteFavorite.onclick = function () {
+    let fav = noteDiv.classList.toggle("favorite")
+    if (fav) noteFavorite.textContent = "\u2605"
+    else noteFavorite.textContent = "\u2606"
+    const currentIndex = notes.findIndex((n) => n.id == note.id)
+    notes[currentIndex].fav = fav
+  }
+
+  const noteDiscard = noteDiv.querySelector("button[title='Discard']")
   noteDiscard.onclick = function () {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes.splice(currentIndex, 1)
     document.getElementById("noteboard").removeChild(noteDiv)
   }
-  
-  noteboard.append(noteDiv)
-}
 
-function reorderNote(id) {
-  // reorder
-  const currentIndex = notes.findIndex((note) => note.id == id)
-  const newIndex = currentIndex + reorder
-  if (newIndex < 0 || newIndex >= notes.length) return;
-  const temp = notes[newIndex]
-  notes[newIndex] = notes[currentIndex]
-  notes[currentIndex] = temp
-  
-  //adjust divs
-  document.getElementById("note-" + notes[newIndex].id).style.zIndex = Number(newIndex);
-  document.getElementById("note-" + notes[currentIndex].id).style.zIndex = Number(currentIndex);
-}
-
-
-function makeFavorite(element) {
-  let fav = noteDiv.classList.toggle("favorite")
-  if (fav) noteFavorite.textContent = "\u2605"
-  else noteFavorite.textContent = "\u2606"
-}
-
-function makeDraggable(element) {
-  grip = element.querySelector(".drag-grip")
-  container = document.querySelector("#noteboard")
-  
-  const posDiff = {
-    x: 0,
-    y: 0,
+  const noteText = noteDiv.querySelector("textarea")
+  noteText.value = note.content
+  noteText.rows = 10;
+  while (noteText.scrollHeight > noteText.clientHeight) noteText.rows++
+  noteText.oninput = function () {
+    noteText.rows = 10;
+    while (noteText.scrollHeight > noteText.clientHeight) noteText.rows++
   }
-  const lastPos = {
-    x: 0,
-    y: 0,
-  }
-  const bounding = {
-    offsetTop: container.offsetTop,
-    width: container.clientWidth,
-  }
-  
-  if (grip == null) return;
-  
-  grip.onmousedown = function (e) {
-    e.preventDefault()
-
-    lastPos.x = e.clientX
-    lastPos.y = e.clientY
-
-    document.onmousemove = function (e) {
-      e.preventDefault()
-
-      posDiff.x = lastPos.x - e.clientX
-      posDiff.y = lastPos.y - e.clientY
-
-      lastPos.x = e.clientX
-      lastPos.y = e.clientY
-  
-      const newPosY = element.offsetTop - posDiff.y
-      if (newPosY >= bounding.offsetTop) {
-        element.style.top = newPosY + "px"
-      }
-
-      const newPosX = element.offsetLeft - posDiff.x
-      if (newPosX >= 0 && newPosX < bounding.width - element.clientWidth) {
-        element.style.left = newPosX + "px"
-      }
-    }
-    document.onmouseup = cancelDrag
-  }
-
-  function cancelDrag() {
-    document.onmousemove = null
-    document.onmouseup = null
+  noteText.onblur = function () {
+    const currentIndex = notes.findIndex((n) => n.id == note.id)
+    notes[currentIndex].content = noteText.value
   }
 }

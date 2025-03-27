@@ -4,32 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./res/main.css">
+  <link rel="stylesheet" href="./res/notes.css">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+  <script src="./js/index.js"></script>
   <script src="./js/notes.js"></script>
   <title>Sticky Notes</title>
 </head>
-<body>
+<body onload="load()">
   <header>
     <button disabled>&equiv;</button>
-    <h1><a href="./about.html">Sticky Notes</a></h1>
-    <h2>Board Title</h2>
-    <button  disabled>Settings</button>
-    <button  disabled>N/D Mode</button>
+    <h1>Sticky Notes</h1>
+    <h2 id="board-name">[board title]</h2>
+    <button onclick="document.getElementById('info-modal').showModal()" title="Help">&#9432;</button>
+    <button disabled>&#x2699;</button>
+    <button title="Toggle Dark Mode" onclick="toggleNightMode()">&#x263E;</button>
   </header>
+
+  <div id="toolbar">
+    <button onclick="addNote()">+ New Note</button>
+  </div>
+
   <main id="noteboard">
+
+    <dialog id="info-modal">
+      <button onclick="document.getElementById('info-modal').close()">close</button>
+      <h2>How to Use Sticky Notes</h2>
+      <section>
+        <p>Description of button to add new note and dragability</p>
+        <p>Additional features like...</p>
+        <p>Creating additional boards.</p>
+        <p>Backing up data</p>
+      </section>
+    </dialog>
+    
     <template id="note-template">
       <div class="note">
         <span class="drag-grip"></span>
         <div>
-          <h3 contenteditable="true">Title</h3>
+          <input name="Note Title" autocomplete="off" placeholder="Unnamed Note" maxlength="25"></input>
           <button title="Favorite"></button>
-          <button title="Bring to Front">&uArr;</button>
           <button title="Discard">&cross;</button>
         </div>
-        <p contenteditable="true">Your text here...</p>
+        <textarea name="Note Content" autocomplete="off" rows="10" placeholder="Your text here..."></textarea>
       </div>
     </template>
-    <button onclick="addNote()">+</button>
   </main>
 </body>
 </html>
