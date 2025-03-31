@@ -1,6 +1,6 @@
 let boards = []
 let notes = []
-let boardName = "Main Board"
+let boardName = ""
 let saved = true
 
 const nightmode = localStorage.getItem("nightmode")
@@ -9,11 +9,8 @@ if (nightmode == "active") toggleNightMode()
 const boardsString = localStorage.getItem("boardNameList")
 boards = (boardsString != null) ? JSON.parse(boardsString) : []
 
-if (boards.length > 0) {
-  boardName = boards[0]
-  loadBoard(boardName)
-} else boards.push(boardName)
-
+if (boards.length == 0) boards.push("Main Board")
+loadBoard(boards[0])
 
 function toggleNightMode() {
   const night = document.querySelector("body").classList.toggle('night')
@@ -28,6 +25,8 @@ function toggleNightMode() {
 }
 
 function loadBoard(board) {
+  boardName = board
+
   const notesString = localStorage.getItem(board)
   notes = (notesString != null) ? JSON.parse(notesString) : []
 
@@ -59,13 +58,10 @@ function createNewBoard() {
   const baseName = "untitled"
   let newName = baseName
   let count = 1
-  while (boards.some((b) => b == newName)) {
-    newName = baseName + count++;
-  }
-  console.log(baseName)
+  while (boards.some((b) => b == newName)) newName = baseName + count++
+
   boards.push(newName)
-  boardName = newName
-  loadBoard(boardName)
+  loadBoard(newName)
   toggleBoardsList()
 }
 

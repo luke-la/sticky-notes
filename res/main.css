@@ -27,9 +27,11 @@ header {
   top: 0;
   left: 0;
   right: 0;
+  z-index: 200;
   display: grid;
   grid-template-columns: max-content max-content 1fr max-content max-content max-content;
-  align-items:center;
+  align-items: center;
+  background-color: var(--base);
 }
 
 button {
@@ -38,8 +40,8 @@ button {
   outline: none;
 
   border-radius: 1rem;
-  background-color: inherit;
-  color: inherit;
+  background-color: var(--base);
+  color: var(--primary-text);
   font-weight: bold;
 
   cursor: pointer
@@ -71,6 +73,7 @@ header button{
   top: 70px;
   left: 0;
   right: 0;
+  z-index: 200;
   display: grid;
   grid-template-columns:  max-content;
   justify-content: center;
@@ -78,10 +81,17 @@ header button{
 }
 
 #boards-list {
-  display: none;
   position: fixed;
   background-color: var(--base);
-  top: 70px;
+  top: 56px;
   left: 0;
-  z-index: 1000;
+  z-index: 200;
+  display: none;
+  list-style: none;
+  margin: 0;
+}
+
+#boards-list button {
+  width: 100%;
+  text-align: left;
 }

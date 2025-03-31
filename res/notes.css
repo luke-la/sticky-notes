@@ -45,11 +45,12 @@
   outline: none;
   border: none;
   background-color: transparent;
+  color: black;
   font-weight: normal;
 }
 .note input:focus,
 .note textarea:focus {
-  text-decoration: solid underline black;
+  text-decoration: dotted underline black;
 }
 .note button:hover,
 .note button:focus-visible {
