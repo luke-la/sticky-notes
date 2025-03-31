@@ -6,13 +6,13 @@
   <link rel="stylesheet" href="./res/main.css">
   <link rel="stylesheet" href="./res/notes.css">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-  <script src="./js/index.js"></script>
+  <script defer src="./js/index.js"></script>
   <script src="./js/notes.js"></script>
   <title>Sticky Notes</title>
 </head>
-<body onload="load()">
+<body>
   <header>
-    <button disabled>&equiv;</button>
+    <button onclick="toggleBoardsList()">&equiv;</button>
     <h2 id="board-name">[board title]</h2>
     <button title="Save Current Board" onclick="saveBoard()">Save</button>
     <button onclick="document.getElementById('info-modal').showModal()" title="Help">&#9432;</button>
@@ -21,10 +21,15 @@
   </header>
 
   <div id="toolbar">
-    <button onclick="addNote()">+ New Note</button>
+    <button onclick="addNote()">Add Note +</button>
   </div>
 
-  <main id="noteboard">
+  <main>
+    <ul id="boards-list">
+      <li>
+        <button onclick="createNewBoard()">Add Board +</button>
+      </li>
+    </ul>
 
     <dialog id="info-modal">
       <button onclick="document.getElementById('info-modal').close()">close</button>
@@ -48,6 +53,7 @@
         <textarea name="Note Content" autocomplete="off" rows="10" placeholder="Your text here..."></textarea>
       </div>
     </template>
+    <div id="noteboard"></div>
   </main>
 </body>
 </html>

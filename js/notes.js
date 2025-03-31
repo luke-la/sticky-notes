@@ -17,6 +17,7 @@ function addNote(note = null) {
   if (note == null) {
     note = new Note()
     notes.push(note)
+    changeSaveStatus()
   }
 
   const template = document.getElementById("note-template")

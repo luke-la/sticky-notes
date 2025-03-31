@@ -76,3 +76,12 @@ header button{
   justify-content: center;
   align-items: baseline;
 }
+
+#boards-list {
+  display: none;
+  position: fixed;
+  background-color: var(--base);
+  top: 70px;
+  left: 0;
+  z-index: 1000;
+}
