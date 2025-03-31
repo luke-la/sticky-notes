@@ -94,6 +94,8 @@ header > button {
   display: none;
   list-style: none;
   margin: 0;
+  padding: 0 2rem 1rem;
+  border-radius: 0 0 1rem 1rem;
 }
 
 #boards-list button {
