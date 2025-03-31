@@ -3,6 +3,7 @@
   --primary-text: hsl(210, 7%, 10%);
   --secondary: hsl(210, 5%, 30%);
 }
+
 .night {
   --base: hsl(210, 7%, 10%);
   --primary-text: hsl(0, 0%, 90%);
@@ -73,6 +74,26 @@ header > button {
   font-size: 1.5rem;
 }
 
+header > h2 > input {
+  width: 18ch;
+  outline: none;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  background-color: inherit;
+  color: inherit;
+  font: inherit;
+}
+
+header > h2 > input:focus {
+  border-color: var(--primary-text);
+}
+
+span#save-status {
+  display: inline-block;
+  width: max-content;
+  font-size: 1rem;
+}
+
 #toolbar {
   position: fixed;
   top: 70px;
@@ -98,7 +119,8 @@ header > button {
   border-radius: 0 0 1rem 1rem;
 }
 
-#boards-list button {
-  width: 100%;
-  text-align: left;
+#boards-list li:not(:first-child) button:hover, 
+#boards-list li:not(:first-child) button:focus-visible {
+  border-color: transparent;
+  text-decoration: solid underline var(--primary-text) 2px;
 }

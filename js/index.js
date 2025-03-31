@@ -12,6 +12,26 @@ boards = (boardsString != null) ? JSON.parse(boardsString) : []
 if (boards.length == 0) boards.push("Main Board")
 loadBoard(boards[0])
 
+const boardNameInput = document.getElementById("board-name")
+boardNameInput.onblur = function () {
+  const oldName = boardName
+  if (boardNameInput.value == oldName) return;
+  else if (boards.some((b) => b == boardNameInput.value)) {
+    alert("You already have a board with that name.")
+    boardNameInput.value = oldName
+  }
+  else {
+    boardName = boardNameInput.value
+
+    const index = boards.findIndex((b) => b == oldName)
+    boards.splice(index, 1, boardName)
+
+    localStorage.setItem("boardNameList", JSON.stringify(boards))
+    localStorage.setItem(boardName, localStorage.getItem(oldName))
+    localStorage.removeItem(oldName)
+  }
+}
+
 function toggleNightMode() {
   const night = document.querySelector("body").classList.toggle('night')
   if (night) {
@@ -30,7 +50,7 @@ function loadBoard(board) {
   const notesString = localStorage.getItem(board)
   notes = (notesString != null) ? JSON.parse(notesString) : []
 
-  document.getElementById("board-name").textContent = board
+  document.getElementById("board-name").value = board
 
   const nb = document.getElementById("noteboard")
   while (nb.hasChildNodes()) nb.removeChild(nb.firstChild)
@@ -50,8 +70,8 @@ function changeSaveStatus(save = false) {
   if (saved == save) return;
 
   saved = save
-  if (save) document.getElementById("board-name").textContent = boardName
-  else document.getElementById("board-name").textContent = boardName + "*"
+  if (save) document.getElementById("save-status").textContent = "saved"
+  else document.getElementById("save-status").textContent = "unsaved"
 }
 
 function createNewBoard() {
@@ -90,3 +110,10 @@ function toggleBoardsList() {
 
   list.style.display = "block"
 }
+
+document.addEventListener("focusin", function (event) {
+  console.log("active")
+  if (!document.getElementById("boards-list").contains(event.target))
+    document.getElementById("boards-list").style.display = "none"
+})
+

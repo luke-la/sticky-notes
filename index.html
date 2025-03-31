@@ -18,16 +18,19 @@
         <button onclick="createNewBoard()">Add Board +</button>
       </li>
     </ul>
-    <h2 id="board-name">[board title]</h2>
+    <h2>
+      <input id="board-name" autocomplete="off" value="Main Board" minlength="1" maxlength="18"/>
+      <span id="save-status">saved</span>
+    </h2>
     <button title="Save Current Board" onclick="saveBoard()">
-      <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
         <polygon points="2,2 16,2 22,8 22,22 2,22" />
         <polygon points="8,22 8,16 16,16 16,22" />
         Save
       </svg>
     </button>
     <button onclick="document.getElementById('info-modal').showModal()" title="Help">
-      <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <circle cx="12" cy="12" r="10" />
         <path d="M8,9 A4 3, 0, 0 1, 16,9 C16,12 12,11 12,14" />
         <circle cx="12" cy="18" r="0.25" />
