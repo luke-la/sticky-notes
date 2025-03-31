@@ -3,11 +3,14 @@ let notes = []
 let boardName = ""
 let saved = true
 
-const nightmode = localStorage.getItem("nightmode")
+const nightmode = localStorage.getItem("Dark Mode")
 if (nightmode == "active") toggleNightMode()
 
 const boardsString = localStorage.getItem("boardNameList")
 boards = (boardsString != null) ? JSON.parse(boardsString) : []
+
+const list = document.getElementById("boards-list")
+const listButton = document.getElementById("btn-boards-list")
 
 if (boards.length == 0) boards.push("Main Board")
 loadBoard(boards[0])
@@ -34,14 +37,8 @@ boardNameInput.onblur = function () {
 
 function toggleNightMode() {
   const night = document.querySelector("body").classList.toggle('night')
-  if (night) {
-    document.querySelector("button[title='Toggle Dark Mode']").textContent = "\u263C"
-    localStorage.setItem("nightmode", "active")
-  }
-  else {
-    document.querySelector("button[title='Toggle Dark Mode']").textContent = "\u263E"
-    localStorage.setItem("nightmode", null)
-  }
+  const nmStatus = (night) ? "active" : null
+  localStorage.setItem("Dark Mode", nmStatus)
 }
 
 function loadBoard(board) {
@@ -75,19 +72,19 @@ function changeSaveStatus(save = false) {
 }
 
 function createNewBoard() {
-  const baseName = "untitled"
+  const baseName = "untitled board"
   let newName = baseName
   let count = 1
   while (boards.some((b) => b == newName)) newName = baseName + count++
 
   boards.push(newName)
+  boards.sort()
   loadBoard(newName)
+  saveBoard(newName)
   toggleBoardsList()
 }
 
 function toggleBoardsList() {
-  const list = document.getElementById("boards-list")
-
   if (list.style.display == "block") {
     list.style.display = "none"
     return
@@ -98,7 +95,6 @@ function toggleBoardsList() {
     item.remove()
   })
 
-  boards.sort()
   for (let board of boards) {
     const item = document.createElement("li")
     const button = document.createElement("button")
@@ -114,10 +110,11 @@ function toggleBoardsList() {
   list.style.display = "block"
 }
 
-document.addEventListener("focusin", function (event) {
-  console.log("active")
-  if (!document.getElementById("boards-list").contains(event.target))
+document.addEventListener("click", function (event) {  
+  if (!list.contains(event.target)
+    && listButton != event.target) {
     document.getElementById("boards-list").style.display = "none"
+  }
 })
 
 function buildDataURI() {

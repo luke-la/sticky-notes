@@ -12,7 +12,7 @@
 </head>
 <body>
   <header>
-    <button onclick="toggleBoardsList()">&equiv;</button>
+    <button id="btn-boards-list" onclick="toggleBoardsList()">&equiv;</button>
     <ul id="boards-list">
       <li class="permanent-list-item">
         <span class="list-icon">+</span>
@@ -23,16 +23,18 @@
           <svg style="display: inline-block; width: 1rem;"viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
             <path d="M2,14 L2,22 L22,22 L22,14" />
             <path d="M8,6 L12,2 L16,6 M12,2 L12,16" />
-            Up
+            Upload
           </svg>
         </span>
         <button onclick="">Upload Board</button>
       </li>
     </ul>
+
     <h2>
-      <input id="board-name" autocomplete="off" value="Main Board" minlength="1" maxlength="18"/>
+      <input id="board-name" autocomplete="off" value="Main Board" minlength="1" maxlength="18" />
       <span id="save-status">saved</span>
     </h2>
+
     <button title="Save Board" onclick="saveBoard()">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
         <polygon points="2,2 16,2 22,8 22,22 2,22" />
@@ -47,7 +49,8 @@
         Download
       </svg>
     </button>
-    <button onclick="document.getElementById('info-modal').showModal()" title="Help">
+
+    <button title="Help" onclick="document.getElementById('info-modal').showModal()">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <circle cx="12" cy="12" r="10" />
         <path d="M8,9 A4 3, 0, 0 1, 16,9 C16,12 12,11 12,14" />
@@ -55,8 +58,29 @@
         Help
       </svg>
     </button>
+
     <button disabled>&#x2699;</button>
-    <button title="Toggle Dark Mode" onclick="toggleNightMode()">&#x263E;</button>
+    <button id="btn-dark-mode" title="Dark Mode" onclick="toggleNightMode()">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12,4 A8 8, 0, 1 0, 20,12 A6 6, 0, 1 1, 12,4" />
+        Dark Mode
+      </svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="6" />
+        <line x1="12" y1="6" x2="12" y2="2" />
+        <line x1="12" y1="18" x2="12" y2="22" />
+      
+        <line x1="6" y1="12" x2="2" y2="12" />
+        <line x1="18" y1="12" x2="22" y2="12" />
+      
+        <line x1="7.7" y1="7.7" x2="4.7" y2="4.7" />
+        <line x1="16.3" y1="7.7" x2="19.3" y2="4.7" />
+      
+        <line x1="7.7" y1="16.3" x2="4.7" y2="19.3" />
+        <line x1="16.3" y1="16.3" x2="19.3" y2="19.3" />
+        Light Mode
+      </svg>
+    </button>
     <div id="toolbar">
       <button onclick="addNote()">Add Note +</button>
     </div>

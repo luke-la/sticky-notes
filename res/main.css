@@ -9,6 +9,14 @@
   --primary-text: hsl(0, 0%, 90%);
   --secondary: hsl(0, 0%, 75%);
 }
+button#btn-dark-mode > :first-child,
+.night button#btn-dark-mode > :last-child {
+  display: block;
+}
+button#btn-dark-mode > :last-child,
+.night button#btn-dark-mode > :first-child {
+  display: none;
+}
 
 body {
   background-color: var(--base);
@@ -31,7 +39,9 @@ header {
   z-index: 200;
   display: grid;
   grid-template-columns: repeat(3, max-content) 1fr repeat(3, max-content);
+  gap: 1rem;
   align-items: center;
+  padding: 0.5rem;
   background-color: var(--base);
 }
 
@@ -44,6 +54,7 @@ button {
   background-color: var(--base);
   color: var(--primary-text);
   font-weight: bold;
+  font-family: inherit;
 
   cursor: pointer
 }
@@ -63,15 +74,15 @@ button:active {
   color: var(--base);
 }
 
-header > * {
-  margin: 0.5rem 1rem;
-}
-
 header > button {
   width: 2.5rem;
   aspect-ratio: 1 / 1;
   padding: 0;
   font-size: 1.5rem;
+}
+
+header > h2 {
+  margin: 0;
 }
 
 header > h2 > input {
