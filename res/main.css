@@ -30,7 +30,7 @@ header {
   right: 0;
   z-index: 200;
   display: grid;
-  grid-template-columns: max-content max-content 1fr max-content max-content max-content;
+  grid-template-columns: repeat(3, max-content) 1fr repeat(3, max-content);
   align-items: center;
   background-color: var(--base);
 }
@@ -119,8 +119,18 @@ span#save-status {
   border-radius: 0 0 1rem 1rem;
 }
 
-#boards-list li:not(:first-child) button:hover, 
-#boards-list li:not(:first-child) button:focus-visible {
+#boards-list li {
+  margin: 0.5rem 0;
+}
+
+#boards-list li:not(.permanent-list-item) button:hover, 
+#boards-list li:not(.permanent-list-item) button:focus-visible {
   border-color: transparent;
   text-decoration: solid underline var(--primary-text) 2px;
+}
+
+#boards-list span.list-icon {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
 }

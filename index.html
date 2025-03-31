@@ -14,19 +14,37 @@
   <header>
     <button onclick="toggleBoardsList()">&equiv;</button>
     <ul id="boards-list">
-      <li>
-        <button onclick="createNewBoard()">Add Board +</button>
+      <li class="permanent-list-item">
+        <span class="list-icon">+</span>
+        <button onclick="createNewBoard()">Add Board</button>
+      </li>
+      <li class="permanent-list-item">
+        <span class="list-icon">
+          <svg style="display: inline-block; width: 1rem;"viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M2,14 L2,22 L22,22 L22,14" />
+            <path d="M8,6 L12,2 L16,6 M12,2 L12,16" />
+            Up
+          </svg>
+        </span>
+        <button onclick="">Upload Board</button>
       </li>
     </ul>
     <h2>
       <input id="board-name" autocomplete="off" value="Main Board" minlength="1" maxlength="18"/>
       <span id="save-status">saved</span>
     </h2>
-    <button title="Save Current Board" onclick="saveBoard()">
+    <button title="Save Board" onclick="saveBoard()">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
         <polygon points="2,2 16,2 22,8 22,22 2,22" />
         <polygon points="8,22 8,16 16,16 16,22" />
         Save
+      </svg>
+    </button>
+    <button title="Download Board" onclick="downloadBoard()">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M2,14 L2,22 L22,22 L22,14" />
+        <path d="M8,12 L12,16 L16,12 M12,16 L12,2" />
+        Download
       </svg>
     </button>
     <button onclick="document.getElementById('info-modal').showModal()" title="Help">

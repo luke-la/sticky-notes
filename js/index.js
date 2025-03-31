@@ -93,7 +93,10 @@ function toggleBoardsList() {
     return
   }
 
-  while (list.children.length > 1) list.removeChild(list.lastChild);
+  const itemsToRemove = list.querySelectorAll("li:not(.permanent-list-item)")
+  itemsToRemove.forEach( function (item) {
+    item.remove()
+  })
 
   boards.sort()
   for (let board of boards) {
@@ -116,4 +119,23 @@ document.addEventListener("focusin", function (event) {
   if (!document.getElementById("boards-list").contains(event.target))
     document.getElementById("boards-list").style.display = "none"
 })
+
+function buildDataURI() {
+  const start = "data:application/json;base64,"
+  const board = {}
+  board.name = boardName
+  board.content = notes
+  const data = btoa(JSON.stringify(board))
+  return start + data
+}
+
+function downloadBoard() {
+  saveBoard()
+  const a = document.createElement("a")
+  a.href = buildDataURI()
+  a.download = boardName
+  document.body.append(a)
+  a.click()
+  document.body.removeChild(a)
+}
 
