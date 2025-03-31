@@ -1,6 +1,7 @@
 let boards = []
 let notes = []
 let boardName = "Main Board"
+let saved = true
 
 function toggleNightMode() {
   const night = document.querySelector("body").classList.toggle('night')
@@ -32,11 +33,18 @@ function load() {
   for (let note of notes) {
     addNote(note)
   }
-
-  setInterval(saveBoard, 15000)
 }
 
 function saveBoard() {
   localStorage.setItem("boardNameList", JSON.stringify(boards))
   localStorage.setItem(boardName, JSON.stringify(notes))
+  changeSaveStatus(true);
+}
+
+function changeSaveStatus(save = false) {
+  if (saved == save) return;
+
+  saved = save
+  if (save) document.getElementById("board-name").textContent = boardName
+  else document.getElementById("board-name").textContent = boardName + "*"
 }

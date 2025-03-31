@@ -56,6 +56,7 @@ function addNote(note = null) {
       document.onmouseup = null
       note.position.x = noteDiv.style.left.slice(0, -2)
       note.position.y = noteDiv.style.top.slice(0, -2)
+      changeSaveStatus()
     }
   }
   grip.ondblclick = function () {
@@ -68,14 +69,18 @@ function addNote(note = null) {
     notes[currentIndex] = temp
 
     // adjust dom
-    document.getElementById("noteboard").append(noteDiv);
+    document.getElementById("noteboard").append(noteDiv)
+    changeSaveStatus()
   }
 
   const noteTitle = noteDiv.querySelector("input")
   noteTitle.value = note.title
   noteTitle.onblur = function () {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
-    notes[currentIndex].title = noteTitle.value;
+    if (notes[currentIndex].title != noteTitle.value) {
+      notes[currentIndex].title = noteTitle.value;
+      changeSaveStatus()
+    }
   }
   
   const noteFavorite = noteDiv.querySelector("button[title='Favorite']")
@@ -91,6 +96,7 @@ function addNote(note = null) {
     else noteFavorite.textContent = "\u2606"
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes[currentIndex].fav = fav
+    changeSaveStatus()
   }
 
   const noteDiscard = noteDiv.querySelector("button[title='Discard']")
@@ -98,6 +104,7 @@ function addNote(note = null) {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes.splice(currentIndex, 1)
     document.getElementById("noteboard").removeChild(noteDiv)
+    changeSaveStatus()
   }
 
   const noteText = noteDiv.querySelector("textarea")
@@ -110,6 +117,9 @@ function addNote(note = null) {
   }
   noteText.onblur = function () {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
-    notes[currentIndex].content = noteText.value
+    if (notes[currentIndex].content != noteText.value) {
+      notes[currentIndex].content = noteText.value
+      changeSaveStatus()
+    }
   }
 }
