@@ -47,6 +47,11 @@ button {
   cursor: pointer
 }
 
+svg {
+  display: block;
+  margin: 0 auto;
+}
+
 button:hover,
 button:focus-visible {
   border-color: var(--primary-text);
@@ -57,11 +62,11 @@ button:active {
   color: var(--base);
 }
 
-header * {
+header > * {
   margin: 0.5rem 1rem;
 }
 
-header button{
+header > button {
   width: 2.5rem;
   aspect-ratio: 1 / 1;
   padding: 0;
@@ -85,7 +90,7 @@ header button{
   background-color: var(--base);
   top: 56px;
   left: 0;
-  z-index: 200;
+  z-index: 250;
   display: none;
   list-style: none;
   margin: 0;
