@@ -25,8 +25,10 @@ body {
 }
 
 dialog {
+  max-width: 70ch;
+  max-height: 80%;
+  padding: 2rem;
   border: 2px solid var(--primary-text);
-  border-radius: 1rem;
   background-color: var(--base);
   color: var(--primary-text);
 }
@@ -124,6 +126,8 @@ span#save-status {
   left: 0;
   z-index: 250;
   display: none;
+  height: calc(100vh - 56px - 1rem);
+  overflow: auto;
   list-style: none;
   margin: 0;
   padding: 0 2rem 1rem;

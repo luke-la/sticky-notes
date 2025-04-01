@@ -41,11 +41,12 @@ function toggleNightMode() {
   localStorage.setItem("Dark Mode", nmStatus)
 }
 
-function loadBoard(board) {
+function loadBoard(board, overwriteNotes = []) {
   boardName = board
 
   const notesString = localStorage.getItem(board)
   notes = (notesString != null) ? JSON.parse(notesString) : []
+  if (overwriteNotes.length > 0) notes = overwriteNotes;
 
   document.getElementById("board-name").value = board
 
@@ -55,6 +56,8 @@ function loadBoard(board) {
   for (let note of notes) {
     addNote(note)
   }
+
+  changeSaveStatus(true)
 }
 
 function saveBoard() {
@@ -71,17 +74,16 @@ function changeSaveStatus(save = false) {
   else document.getElementById("save-status").textContent = "unsaved"
 }
 
-function createNewBoard() {
-  const baseName = "untitled board"
+function createNewBoard(baseName = "untitled board", notes = []) {
   let newName = baseName
   let count = 1
   while (boards.some((b) => b == newName)) newName = baseName + count++
 
   boards.push(newName)
   boards.sort()
-  loadBoard(newName)
-  saveBoard(newName)
-  toggleBoardsList()
+  loadBoard(newName, notes)
+  changeSaveStatus()
+  list.style.display = "none"
 }
 
 function toggleBoardsList() {
@@ -112,7 +114,7 @@ function toggleBoardsList() {
 
 document.addEventListener("click", function (event) {  
   if (!list.contains(event.target)
-    && listButton != event.target) {
+    && !listButton.contains(event.target)) {
     document.getElementById("boards-list").style.display = "none"
   }
 })
@@ -134,5 +136,47 @@ function downloadBoard() {
   document.body.append(a)
   a.click()
   document.body.removeChild(a)
+}
+
+function uploadBoard() {
+  const dialog = document.getElementById('open-file-modal')
+  const input = document.getElementById('file-input')
+  let loadedFile = null;
+  dialog.showModal()
+  document.getElementById("btn-file-accept").onclick = function () {
+    if (input.files[0] == null) {
+      alert("No file selected.")
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = function() {
+      loadedFile = JSON.parse(reader.result)
+      if (!loadedFile) {
+        alert("The file didn't contain valid JSON.")
+        return
+      }
+      if (!loadedFile.name || !loadedFile.content) {
+        alert("The file has an improper format.")
+        return
+      }
+      createNewBoard(loadedFile.name, loadedFile.content)
+    }
+
+    reader.onerror = function () {
+      console.error("There was an error reading the file.",
+        {
+          reader: reader,
+          file: input.files[0],
+        })
+    }
+
+    reader.readAsText(input.files[0])
+    dialog.close()
+  }
+  document.getElementById("btn-file-cancel").onclick = function () {
+    input.value = null;
+    dialog.close()
+  }
 }
 

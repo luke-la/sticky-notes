@@ -12,11 +12,16 @@
 </head>
 <body>
   <header>
-    <button id="btn-boards-list" onclick="toggleBoardsList()">&equiv;</button>
+    <button id="btn-boards-list" onclick="toggleBoardsList()">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3">
+        <path d="M5,6 L19,6 M5,12 L19,12 M5,18 L19,18" />
+        Menu
+      </svg>
+    </button>
     <ul id="boards-list">
       <li class="permanent-list-item">
         <span class="list-icon">+</span>
-        <button onclick="createNewBoard()">Add Board</button>
+        <button onclick="createNewBoard()">Add New Board</button>
       </li>
       <li class="permanent-list-item">
         <span class="list-icon">
@@ -26,7 +31,7 @@
             Upload
           </svg>
         </span>
-        <button onclick="">Upload Board</button>
+        <button onclick="uploadBoard()">Add From File</button>
       </li>
     </ul>
 
@@ -81,20 +86,50 @@
         Light Mode
       </svg>
     </button>
+
     <div id="toolbar">
       <button onclick="addNote()">Add Note +</button>
     </div>
   </header>
 
   <main>
+    <dialog id="open-file-modal">
+      <input id="file-input" type="file" accept=".json,application/json" />
+      <button id="btn-file-accept">Accept</button>
+      <button id="btn-file-cancel">Cancel</button>
+    </dialog>
     <dialog id="info-modal">
       <button onclick="document.getElementById('info-modal').close()">close</button>
       <h2>How to Use Sticky Notes</h2>
+      <hr />
       <section>
-        <p>Description of button to add new note and dragability</p>
-        <p>Additional features like...</p>
-        <p>Creating additional boards.</p>
+        <h3>Creating Notes</h3>
+        <p>Clicking the add note button at the top of the screen will create a new note.</p>
+        <p>Click the note's fields to change the data.</p>
+        <p>Each note has a favorite button which will change it's background color to something more visible, and has a delete button which will remove it.</p>
+        <p>Notes can be repositioned by clicking and holding the colored bar at the top of the note and draging it to a new position</p>
+      </section>
+      <section>
+        <h3>Board Options</h3>
+        <p>You can change the name of your current board by clicking it's tilte on the header bar.</p>
+        <p>You will also want to click the save button in order for your notes contents to be saved to local storage.</p>
+        <p>If you want to back up your boards, you can download them as JSON files.</p>
+        <p>The hamburger menu at the top left of the screen allows you to create new moad</p>
         <p>Backing up data</p>
+      </section>
+      <section>
+        <h3>Additional Settings</h3>
+        <p>Some of the following features are not yet implemented</p>
+        <dl>
+          <dt>Dark Mode</dt>
+          <dd>Clicking the top left button will toggle a dark background and light text, though the colors of the sticky notes will remain unchanged.</dd>
+          <dt>(TODO) Display Note Order</dt>
+          <dd>When this option is selected, the in which notes appear in thier list is displayed in the corner of the note. This can be inportant for tab order, and for which notes diplay on top of one another.</dd>
+          <dt>(TODO) Sticky Note Theme</dt>
+          <dd>Select a theme for the background colors of the sticky notes.</dd>
+          <dt>(TODO) </dt>
+          <dd></dd>
+        </dl>
       </section>
     </dialog>
     
