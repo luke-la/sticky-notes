@@ -1,7 +1,8 @@
 class Note {
   static type = {
     default: null,
-    checklist: "checklist"
+    checklist: "checklist",
+    image: "image",
   }
   constructor() {
     this.id = String(Date.now())
@@ -158,6 +159,22 @@ function addNote(note = null, type = null) {
       note.content = noteList.innerHTML
       changeSaveStatus()
     }
+  }
+  else if (note.type == Note.type.image) {
+    const srcInput = document.createElement("input")
+    const linkedImage = document.createElement("img")
+    noteContent.append(linkedImage, srcInput)
+    srcInput.name = "Image Url Input"
+    srcInput.type = "text"
+    srcInput.placeholder = "Image Url..."
+    srcInput.autocomplete = false
+    srcInput.onblur = function () {
+      linkedImage.src = srcInput.value
+      note.content = srcInput.value
+      changeSaveStatus()
+    }
+    srcInput.value = note.content
+    linkedImage.src = srcInput.value
   }
   else {
     const noteText = document.createElement("textarea")
