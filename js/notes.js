@@ -124,6 +124,10 @@ function addNote(note = null, type = null) {
     noteContent.append(noteList, addItemInput, addItemButton)
     
     noteList.innerHTML = note.content
+    const toUpdateOnchange = noteList.querySelectorAll("li > input")
+    for (let element of toUpdateOnchange) {
+      element.onchange = checkedChanged
+    }
 
     addItemInput.name = "Add Checklist Item"
     addItemInput.placeholder = "Enter task..."
@@ -144,18 +148,21 @@ function addNote(note = null, type = null) {
 
       ckb.id = note.id + "-ckb-" + indexID
       ckb.type = "checkbox"
-        ckb.onchange = function() {
-        if (ckb.checked) ckb.setAttribute("checked", "checked")
-        else ckb.removeAttribute("checked")
-        note.content = noteList.innerHTML
-        changeSaveStatus()
-      }
+      ckb.onchange = checkedChanged
 
       desc.setAttribute("for", ckb.id)
       desc.textContent = addItemInput.value
       addItemInput.value = null
 
       noteList.append(listItem)
+      note.content = noteList.innerHTML
+      changeSaveStatus()
+    }
+
+    function checkedChanged (e) {
+      const element = e.target
+      if (element.checked) element.setAttribute("checked", "checked")
+      else element.removeAttribute("checked")
       note.content = noteList.innerHTML
       changeSaveStatus()
     }
