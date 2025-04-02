@@ -1,4 +1,5 @@
 let boards = []
+let trash = []
 let notes = []
 let boardName = ""
 let saved = true
@@ -6,33 +7,59 @@ let saved = true
 const nightmode = localStorage.getItem("Dark Mode")
 if (nightmode == "active") toggleNightMode()
 
-const boardsString = localStorage.getItem("boardNameList")
+const boardsString = localStorage.getItem("boardList")
 boards = (boardsString != null) ? JSON.parse(boardsString) : []
+
+const trashString = localStorage.getItem("trashList")
+trash = (trashString != null) ? JSON.parse(trashString) : []
 
 const list = document.getElementById("boards-list")
 const listButton = document.getElementById("btn-boards-list")
 
-if (boards.length == 0) boards.push("Main Board")
-loadBoard(boards[0])
+if (boards.length == 0) {
+  boards.push("Main Board")
+  loadBoard(boards[0])
+}
+else {
+  const lastBoard = localStorage.getItem("lastBoard")
+  if (lastBoard && localStorage.getItem(lastBoard)) loadBoard(lastBoard)
+  else loadBoard(boards[0])
+}
 
 const boardNameInput = document.getElementById("board-name")
 boardNameInput.onblur = function () {
   const oldName = boardName
-  if (boardNameInput.value == oldName) return;
-  else if (boards.some((b) => b == boardNameInput.value)) {
-    alert("You already have a board with that name.")
+  const newName = boardNameInput.value
+
+  if (newName == oldName) return
+
+  if (boards.some((b) => b == newName)) {
     boardNameInput.value = oldName
+    alert("You already have a board with that name.")
+    return
   }
-  else {
-    boardName = boardNameInput.value
+  
+  saveBoard()
 
-    const index = boards.findIndex((b) => b == oldName)
-    boards.splice(index, 1, boardName)
+  if (trash.some((b) => b == newName)) {
+    //this might break ~270 years when the digit ticks over to the 14th decimal place
+    newTrashName = "trash" + Date.now()
+    const trashIndex = trash.findIndex((b) => b == newName)
+    trash[trashIndex] = newTrashName
 
-    localStorage.setItem("boardNameList", JSON.stringify(boards))
-    localStorage.setItem(boardName, localStorage.getItem(oldName))
-    localStorage.removeItem(oldName)
+    localStorage.setItem("trashList", JSON.stringify(trash))
+    localStorage.setItem(newTrashName, localStorage.getItem(newName))
+    alert("Your board in trash with the same name has been renamed.")
   }
+  
+  boardName = newName
+
+  const index = boards.findIndex((b) => b == oldName)
+  boards[index] = boardName
+
+  localStorage.setItem("boardList", JSON.stringify(boards))
+  localStorage.setItem(boardName, localStorage.getItem(oldName))
+  localStorage.removeItem(oldName)
 }
 
 function toggleNightMode() {
@@ -57,11 +84,12 @@ function loadBoard(board, overwriteNotes = []) {
     for (let note of notes)
       addNote(note)
 
+  localStorage.setItem("lastBoard", board)
   changeSaveStatus(true)
 }
 
 function saveBoard() {
-  localStorage.setItem("boardNameList", JSON.stringify(boards))
+  localStorage.setItem("boardList", JSON.stringify(boards))
   localStorage.setItem(boardName, JSON.stringify(notes))
   changeSaveStatus(true);
 }
@@ -77,7 +105,8 @@ function changeSaveStatus(save = false) {
 function createNewBoard(baseName = "untitled board", notes = []) {
   let newName = baseName
   let count = 1
-  while (boards.some((b) => b == newName)) newName = baseName + count++
+  while (boards.some((b) => b == newName) || trash.some((b) => b == newName))
+    newName = baseName + count++
 
   boards.push(newName)
   boards.sort()
@@ -106,7 +135,7 @@ function toggleBoardsList() {
       list.style.display = "none"
     }
     item.append(button)
-    list.append(item)
+    list.insertBefore(item, list.lastElementChild)
   }
 
   list.style.display = "block"
@@ -118,6 +147,30 @@ document.addEventListener("click", function (event) {
     document.getElementById("boards-list").style.display = "none"
   }
 })
+
+function openTrashModal() {
+  const modal = document.getElementById("trash-modal")
+
+  const trashList = modal.querySelector("#trash-list")
+
+  const message = modal.querySelector("#trash-message")
+  if (trash.length < 1) message.textContent = "You have no boards in your trash bin."
+  else if (trash.length == 1) message.textContent = "You have one board in your trash bin."
+  else message.textContent = "You have " + trash.length + " boards in your trash bin."
+  
+  trashList.innerHTML = null
+  if (trash.length > 0) {
+    for (let t of trash) {
+      const notesString = localStorage.getItem(t)
+      const noteCount = (notesString != null) ? JSON.parse(notesString).length : 0
+      const item = document.createElement("li")
+      item.textContent = t + " | Notes: " + noteCount
+      trashList.append(item)
+    }
+  }
+
+  modal.showModal()
+}
 
 function buildDataURI() {
   const start = "data:application/json;base64,"
@@ -178,5 +231,37 @@ function uploadBoard() {
     input.value = null;
     dialog.close()
   }
+}
+
+function trashBoard() {
+  const result = confirm("Are you sure you want to move your '" +
+    boardName +
+    "' board to trash?")
+  if (result) {
+    const indexToRemove = boards.findIndex((b) => b == boardName)
+    trash.push(boards[indexToRemove])
+    boards.splice(indexToRemove, 1)
+    if (boards.length < 1) boards.push("Main Board")
+    localStorage.setItem("boardList", JSON.stringify(boards))
+    localStorage.setItem("trashList", JSON.stringify(trash))
+    loadBoard(boards[0])
+  }
+}
+
+
+function deleteBoard() {
+  const result = prompt("Are you sure you want to permenantly delete your '" +
+    boardName +
+    "' board?\nPlease enter the name of the board below to confirm deletion, or click cancel to escape.")
+  if (result == null) return
+  else if (result == boardName) {
+    localStorage.removeItem(boardName)
+    const indexToRemove = boards.findIndex((b) => b == boardName)
+    boards.splice(indexToRemove, 1)
+    if (boards.length < 1) boards.push("Main Board")
+    localStorage.setItem("boardList", JSON.stringify(boards))
+    loadBoard(boards[0])
+  }
+  else alert("You did not enter the correct name. If you wish to delete your board, please try again.")
 }
 

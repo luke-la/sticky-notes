@@ -33,6 +33,10 @@ dialog {
   color: var(--primary-text);
 }
 
+dialog::backdrop {
+  background-color: hsla(0, 0%, 0%, 50%);
+}
+
 header {
   position: fixed;
   top: 0;
@@ -40,7 +44,7 @@ header {
   right: 0;
   z-index: 200;
   display: grid;
-  grid-template-columns: repeat(3, max-content) 1fr repeat(3, max-content);
+  grid-template-columns: repeat(3, max-content) 1fr repeat(4, max-content);
   gap: 1rem;
   align-items: center;
   padding: 0.5rem;
@@ -58,12 +62,22 @@ button {
   font-weight: bold;
   font-family: inherit;
 
-  cursor: pointer
+  cursor: pointer;
+  transition: 100ms ease
 }
 
 svg {
   display: block;
   margin: 0 auto;
+}
+
+svg .trash-icon-lid {
+  transition: 0.2s ease;
+  transform-origin: 50% 50%;
+}
+
+button#btn-trash:hover svg .trash-icon-lid {
+  transform: rotate(20deg);
 }
 
 button:hover,
