@@ -34,9 +34,17 @@
   color: hsl(43, 70%, 30%);
 }
 
-.note div {
+.note div.note-header {
   width: max-content;
   height: 40px;
+}
+
+.note div.note-header button {
+  width: 2.5rem;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.5rem;
 }
 
 .note input,
@@ -44,9 +52,12 @@
 .note textarea {
   outline: none;
   border: none;
+  padding: 0;
   background-color: transparent;
   color: black;
   font-weight: normal;
+  font-size: 1rem;
+  font-family: inherit;
 }
 .note input:focus,
 .note textarea:focus {
@@ -61,18 +72,19 @@
   color: white;
 }
 
-.note input {
+.note input.note-name {
   width: 18rem;
   font-family: inherit;
   font-size: 1.25rem;
 }
 
-.note button {
-  width: 2.5rem;
-  aspect-ratio: 1 / 1;
-  padding: 0;
-  border-radius: 50%;
-  font-size: 1.5rem;
+.note input[type="checkbox"] {
+  accent-color: black;
+  margin: 0.5rem 1rem;
+}
+
+.note input[type="checkbox"]:checked ~ label {
+  text-decoration: line-through solid black;
 }
 
 .note textarea {
@@ -80,6 +92,11 @@
   padding: 0;
   resize: none;
   font-size: 1rem;
+}
+
+.note ul {
+  list-style: none;
+  padding: 0;
 }
 
 .note:focus-within {

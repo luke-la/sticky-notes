@@ -113,8 +113,8 @@ span#save-status {
   left: 0;
   right: 0;
   z-index: 200;
-  display: grid;
-  grid-template-columns:  max-content;
+  display: flex;
+  gap: 1rem;
   justify-content: center;
   align-items: baseline;
 }

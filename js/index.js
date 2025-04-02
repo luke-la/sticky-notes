@@ -53,9 +53,9 @@ function loadBoard(board, overwriteNotes = []) {
   const nb = document.getElementById("noteboard")
   while (nb.hasChildNodes()) nb.removeChild(nb.firstChild)
 
-  for (let note of notes) {
-    addNote(note)
-  }
+  if (notes && notes.length > 0)
+    for (let note of notes)
+      addNote(note)
 
   changeSaveStatus(true)
 }

@@ -15,7 +15,6 @@
     <button id="btn-boards-list" onclick="toggleBoardsList()">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3">
         <path d="M5,6 L19,6 M5,12 L19,12 M5,18 L19,18" />
-        Menu
       </svg>
     </button>
     <ul id="boards-list">
@@ -25,10 +24,9 @@
       </li>
       <li class="permanent-list-item">
         <span class="list-icon">
-          <svg style="display: inline-block; width: 1rem;"viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+          <svg style="display: inline-block; width: 1rem;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
             <path d="M2,14 L2,22 L22,22 L22,14" />
             <path d="M8,6 L12,2 L16,6 M12,2 L12,16" />
-            Upload
           </svg>
         </span>
         <button onclick="uploadBoard()">Add From File</button>
@@ -44,14 +42,12 @@
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
         <polygon points="2,2 16,2 22,8 22,22 2,22" />
         <polygon points="8,22 8,16 16,16 16,22" />
-        Save
       </svg>
     </button>
     <button title="Download Board" onclick="downloadBoard()">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
         <path d="M2,14 L2,22 L22,22 L22,14" />
         <path d="M8,12 L12,16 L16,12 M12,16 L12,2" />
-        Download
       </svg>
     </button>
 
@@ -59,8 +55,7 @@
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <circle cx="12" cy="12" r="10" />
         <path d="M8,9 A4 3, 0, 0 1, 16,9 C16,12 12,11 12,14" />
-        <circle cx="12" cy="18" r="0.25" />
-        Help
+        <circle cx="12" cy="18" r="1" stroke-width="0" fill="currentColor" />
       </svg>
     </button>
 
@@ -68,7 +63,6 @@
     <button id="btn-dark-mode" title="Dark Mode" onclick="toggleNightMode()">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12,4 A8 8, 0, 1 0, 20,12 A6 6, 0, 1 1, 12,4" />
-        Dark Mode
       </svg>
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <circle cx="12" cy="12" r="6" />
@@ -83,12 +77,12 @@
       
         <line x1="7.7" y1="16.3" x2="4.7" y2="19.3" />
         <line x1="16.3" y1="16.3" x2="19.3" y2="19.3" />
-        Light Mode
       </svg>
     </button>
 
     <div id="toolbar">
       <button onclick="addNote()">Add Note +</button>
+      <button onclick="addNote(null, Note.type.checklist)">Add Checklist +</button>
     </div>
   </header>
 
@@ -136,14 +130,15 @@
     <template id="note-template">
       <div class="note">
         <span class="drag-grip"></span>
-        <div>
-          <input name="Note Title" autocomplete="off" placeholder="Unnamed Note" maxlength="25"></input>
+        <div class="note-header">
+          <input name="Note Name" class="note-name" type="text" autocomplete="off" placeholder="Unnamed Note" maxlength="25">
           <button title="Favorite"></button>
           <button title="Discard">&cross;</button>
         </div>
-        <textarea name="Note Content" autocomplete="off" rows="10" placeholder="Your text here..."></textarea>
+        <div class="note-content"></div>
       </div>
     </template>
+
     <div id="noteboard"></div>
   </main>
 </body>

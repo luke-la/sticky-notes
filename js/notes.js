@@ -1,6 +1,11 @@
 class Note {
+  static type = {
+    default: null,
+    checklist: "checklist"
+  }
   constructor() {
     this.id = String(Date.now())
+    this.type = null
     this.title = ""
     this.content = ""
     this.fav = false
@@ -11,16 +16,18 @@ class Note {
   }
 }
 
-function addNote(note = null) {
+function addNote(note = null, type = null) {
   const noteboard = document.getElementById("noteboard")
 
   if (note == null) {
     note = new Note()
+    note.type = type
     notes.push(note)
     changeSaveStatus()
   }
 
   const template = document.getElementById("note-template")
+
   const noteDiv = template.content.cloneNode(true).firstElementChild
   noteDiv.id = "note-" + note.id
   noteDiv.style.left = note.position.x + "px"
@@ -108,19 +115,68 @@ function addNote(note = null) {
     changeSaveStatus()
   }
 
-  const noteText = noteDiv.querySelector("textarea")
-  noteText.value = note.content
-  noteText.rows = 10;
-  while (noteText.scrollHeight > noteText.clientHeight) noteText.rows++
-  noteText.oninput = function () {
-    noteText.rows = 10;
-    while (noteText.scrollHeight > noteText.clientHeight) noteText.rows++
-  }
-  noteText.onblur = function () {
-    const currentIndex = notes.findIndex((n) => n.id == note.id)
-    if (notes[currentIndex].content != noteText.value) {
-      notes[currentIndex].content = noteText.value
+  const noteContent = noteDiv.querySelector(".note-content")
+  if (note.type == Note.type.checklist) {
+    const noteList = document.createElement("ul")
+    const addItemInput = document.createElement("input")
+    const addItemButton = document.createElement("button")
+    noteContent.append(noteList, addItemInput, addItemButton)
+    
+    noteList.innerHTML = note.content
+
+    addItemInput.name = "Add Checklist Item"
+    addItemInput.placeholder = "Enter task..."
+    addItemInput.type = "text"
+    addItemInput.maxLength = 25
+    addItemInput.autocomplete = false
+
+    addItemButton.textContent = "+"
+    addItemButton.onclick = function () {
+      if (!addItemInput.value || addItemInput.value.length < 1) return
+
+      const listItem = document.createElement("li");
+      const ckb = document.createElement("input")
+      const desc = document.createElement("label")
+      listItem.append(ckb, desc);
+
+      const indexID = noteList.children.length
+
+      ckb.id = note.id + "-ckb-" + indexID
+      ckb.type = "checkbox"
+        ckb.onchange = function() {
+        if (ckb.checked) ckb.setAttribute("checked", "checked")
+        else ckb.removeAttribute("checked")
+        note.content = noteList.innerHTML
+        changeSaveStatus()
+      }
+
+      desc.setAttribute("for", ckb.id)
+      desc.textContent = addItemInput.value
+      addItemInput.value = null
+
+      noteList.append(listItem)
+      note.content = noteList.innerHTML
       changeSaveStatus()
     }
   }
+  else {
+    const noteText = document.createElement("textarea")
+    noteContent.append(noteText)
+    noteText.name = "Note Text"
+    noteText.placeholder = "Your text here..."
+    noteText.value = note.content
+    noteText.rows = 10;
+    while (noteText.scrollHeight > noteText.clientHeight) noteText.rows++
+    noteText.oninput = function () {
+      noteText.rows = 10;
+      while (noteText.scrollHeight > noteText.clientHeight) noteText.rows++
+    }
+    noteText.onblur = function () {
+      if (note.content != noteText.value) {
+        note.content = noteText.value
+        changeSaveStatus()
+      }
+    }
+  }
 }
+
