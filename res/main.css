@@ -2,7 +2,7 @@
   --near-base: hsl(0, 0%, 95%);
   --base: hsl(0, 0%, 87%);
   --primary-text: hsl(210, 7%, 7%);
-  --secondary: hsl(210, 5%, 30%);
+  --secondary: hsl(210, 5%, 25%);
 }
 
 .dark {
@@ -51,6 +51,11 @@ body {
   background-color: var(--near-base);
   color: var(--primary-text);
   font: 1rem monospace;
+}
+
+:disabled {
+  color: gray;
+  cursor: auto;
 }
 
 dialog {
@@ -118,12 +123,12 @@ button#btn-trash:hover svg .trash-icon-lid {
   transform: rotate(20deg);
 }
 
-button:hover,
+button:hover:not(:disabled),
 button:focus-visible {
   border-color: var(--primary-text);
 }
 
-button:active {
+button:active:not(:disabled) {
   background-color: var(--primary-text);
   color: var(--base);
 }

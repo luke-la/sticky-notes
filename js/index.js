@@ -1,6 +1,7 @@
 let boards, trash, notes, boardName
 let saved = true
 let darkMode, noteTheme, showNoteOrder
+let snapToGrid, gridSize = 15
 
 // load boards and notes from storage
 const boardsString = localStorage.getItem("boardList")
@@ -53,21 +54,10 @@ function toggleDarkMode() {
   localStorage.setItem("darkMode", nmStatus)
 }
 
-// theme
-noteTheme = localStorage.getItem("noteTheme")
-if (noteTheme) document.querySelector("#noteboard").classList.add(noteTheme)
-else updateTheme("theme-classic")
-
-function updateTheme(newTheme) {
-  document.querySelector("#noteboard").classList.replace(noteTheme, newTheme)
-  noteTheme = newTheme
-  localStorage.setItem("noteTheme", newTheme)
-}
-
 // note order
+showNoteOrder = localStorage.getItem("showNoteOrder")
 const ckbShowNoteOrder = document.getElementById("ckb-show-note-order")
 ckbShowNoteOrder.onchange = toggleShowNoteOrder
-showNoteOrder = localStorage.getItem("showNoteOrder")
 if (showNoteOrder === "display") {
   toggleShowNoteOrder()
   ckbShowNoteOrder.checked = true
@@ -77,6 +67,49 @@ function toggleShowNoteOrder()  {
   const shown = document.querySelector("body").classList.toggle('note-order-shown')
   const shownStatus = (shown) ? "display" : null
   localStorage.setItem("showNoteOrder", shownStatus)
+}
+
+// grid snapping 
+snapToGrid = localStorage.getItem("snapToGrid") === "true"
+const ckbGridSnap = document.getElementById("ckb-grid-snapping")
+ckbGridSnap.onchange = function () {
+  snapToGrid = ckbGridSnap.checked
+  inputSize.disabled = !ckbGridSnap.checked
+  localStorage.setItem("snapToGrid", String(ckbGridSnap.checked))
+}
+
+const storedGridSize = parseInt(localStorage.getItem("gridSize"))
+const inputSize = document.getElementById("grid-size")
+const sizeMin = parseInt(inputSize.min)
+const sizeMax = parseInt(inputSize.max)
+
+if (storedGridSize) {
+  gridSize = storedGridSize
+  if (gridSize < sizeMin) gridSize = sizeMin
+  else if (gridSize > sizeMax) gridSize = sizeMax
+}
+
+inputSize.disabled = !ckbGridSnap.checked
+inputSize.value = gridSize
+inputSize.input
+inputSize.onchange = function () {
+  if (isNaN(inputSize.value)) return
+  if (inputSize.value > sizeMax) inputSize.value = sizeMax
+  else if (inputSize.value < sizeMin) inputSize.value = sizeMin
+
+  gridSize = inputSize.value
+  localStorage.setItem("gridSize", gridSize)
+}
+
+// theme
+noteTheme = localStorage.getItem("noteTheme")
+if (noteTheme) document.querySelector("#noteboard").classList.add(noteTheme)
+else updateTheme("theme-classic")
+
+function updateTheme(newTheme) {
+  document.querySelector("#noteboard").classList.replace(noteTheme, newTheme)
+  noteTheme = newTheme
+  localStorage.setItem("noteTheme", newTheme)
 }
 
 // boards list and buttons
@@ -132,7 +165,8 @@ btnImportBoard.onclick = function () {
   const btnCancel = document.getElementById("btn-file-cancel")
 
   input.onchange = function () {
-    btnAccept.disabled = (input.files[0] === null)
+    console.log(input.files[0])
+    btnAccept.disabled = (!input.files[0])
   }
 
   btnAccept.disabled = true;
@@ -359,7 +393,6 @@ function deleteBoard() {
 
 // toolbar buttons 
 const buttons = document.querySelectorAll("#toolbar > button")
-console.log(buttons)
 buttons[0].onclick = function () {
   addNote()
 }

@@ -50,14 +50,30 @@ function addNote(note = null, type = null) {
       const differenceX = lastPos.x - e.clientX
       const differenceY = lastPos.y - e.clientY
 
-      lastPos.x = e.clientX
-      lastPos.y = e.clientY
-  
-      const newPosY = noteDiv.offsetTop - differenceY
-      noteDiv.style.top = Math.max(newPosY, 0) + "px"
+      if (snapToGrid) {
+        if (Math.abs(differenceX) > gridSize) {
+          lastPos.x = e.clientX
 
-      const newPosX = noteDiv.offsetLeft - differenceX
-      noteDiv.style.left = Math.max(newPosX, 0) + "px"
+          const newPosX = noteDiv.offsetLeft - (noteDiv.offsetLeft % gridSize) - (differenceX - differenceX % gridSize)
+          noteDiv.style.left = Math.max(newPosX, 0) + "px"
+        }
+        if (Math.abs(differenceY) > gridSize) {
+          lastPos.y = e.clientY
+
+          const newPosY = noteDiv.offsetTop - (noteDiv.offsetTop % gridSize) - (differenceY - differenceY % gridSize)
+          noteDiv.style.top = Math.max(newPosY, 0) + "px"
+        }
+      }
+      else {
+        lastPos.x = e.clientX
+        lastPos.y = e.clientY
+
+        const newPosX = noteDiv.offsetLeft - differenceX
+        noteDiv.style.left = Math.max(newPosX, 0) + "px"
+
+        const newPosY = noteDiv.offsetTop - differenceY
+        noteDiv.style.top = Math.max(newPosY, 0) + "px"
+      }
     }
 
     document.onmouseup = function (e) {
