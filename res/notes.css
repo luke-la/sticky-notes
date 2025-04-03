@@ -1,17 +1,35 @@
+/* Generic Note Styles */
+
 .note {
+  /* backup styling in case a theme doesn't load properly */
+  --normal-bg: lightblue;
+  --normal-deco: cornflowerblue;
+  --favorite-bg: gold;
+  --favorite-deco: goldenrod;
   position: absolute;
   padding: 0.75rem;
-  background-color: lightblue;
+  background-color: var(--normal-bg);
   color: black;
-  box-shadow: 0px 0px 4px 2px #0005;
+  box-shadow: 2px 2px 4px 2px #0005;
+  border: 2px solid transparent;
   max-width: 400px;
 }
 
-.drag-grip {
+.note.favorite {
+  background-color: var(--favorite-bg);
+  z-index: 25;
+}
+
+.note .drag-grip {
   display: block;
   height: 2rem;
-  background-color: cornflowerblue;
+  border: 2px solid transparent;
+  background-color: var(--normal-deco);
   cursor: grab;
+}
+
+.note.favorite .drag-grip {
+  background-color: var(--favorite-deco);
 }
 
 .drag-grip:active {
@@ -19,20 +37,7 @@
 }
 
 .note ::placeholder {
-  color: hsl(223, 45%, 35%);
-}
-
-.note.favorite {
-  background-color: gold;
-  z-index: 25;
-}
-
-.note.favorite .drag-grip {
-  background-color: goldenrod;
-}
-
-.note.favorite ::placeholder {
-  color: hsl(43, 70%, 30%);
+  color: hsla(0, 0%, 0%, 70%);
 }
 
 .note div.note-header {
@@ -55,18 +60,18 @@
   border: none;
   padding: 0;
   background-color: transparent;
-  color: black;
+  color: inherit;
   font-weight: normal;
   font-size: 1rem;
   font-family: inherit;
 }
 .note input:focus,
 .note textarea:focus {
-  text-decoration: dotted underline black;
+  text-decoration: dotted underline currentColor;
 }
 .note button:hover,
 .note button:focus-visible {
-  text-decoration: solid underline black;
+  text-decoration: solid underline currentColor;
 }
 .note button:active {
   background-color: black;
@@ -97,7 +102,7 @@
 }
 
 .note input[type="checkbox"]:checked + label {
-  text-decoration: line-through solid black;
+  text-decoration: line-through solid currentColor;
 }
 
 .note img {

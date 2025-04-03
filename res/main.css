@@ -1,14 +1,17 @@
 :root {
-  --base: hsl(0, 0%, 90%);
-  --primary-text: hsl(210, 7%, 10%);
+  --near-base: hsl(0, 0%, 95%);
+  --base: hsl(0, 0%, 87%);
+  --primary-text: hsl(210, 7%, 7%);
   --secondary: hsl(210, 5%, 30%);
 }
 
 .night {
-  --base: hsl(210, 7%, 10%);
+  --near-base: hsl(210, 7%, 10%);
+  --base: hsl(210, 5%, 15%);
   --primary-text: hsl(0, 0%, 90%);
   --secondary: hsl(0, 0%, 75%);
 }
+
 button#btn-dark-mode > :first-child,
 .night button#btn-dark-mode > :last-child {
   display: block;
@@ -19,7 +22,7 @@ button#btn-dark-mode > :last-child,
 }
 
 body {
-  background-color: var(--base);
+  background-color: var(--near-base);
   color: var(--primary-text);
   font: 1rem monospace;
 }
@@ -28,7 +31,7 @@ dialog {
   max-width: 70ch;
   max-height: 80%;
   padding: 2rem;
-  border: 2px solid var(--primary-text);
+  border: none;
   background-color: var(--base);
   color: var(--primary-text);
 }

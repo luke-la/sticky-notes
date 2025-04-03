@@ -7,6 +7,17 @@ let saved = true
 const nightmode = localStorage.getItem("Dark Mode")
 if (nightmode == "active") toggleNightMode()
 
+let noteTheme = localStorage.getItem("noteTheme")
+if (noteTheme) document.querySelector("#noteboard").classList.add(noteTheme)
+else updateTheme("theme-classic")
+
+function updateTheme(newTheme) {
+  document.querySelector("#noteboard").classList.replace(noteTheme, newTheme)
+  noteTheme = newTheme
+  localStorage.setItem("noteTheme", newTheme)
+  console.log("here", newTheme)
+}
+
 const boardsString = localStorage.getItem("boardList")
 boards = (boardsString != null) ? JSON.parse(boardsString) : []
 
@@ -170,6 +181,24 @@ function openTrashModal() {
   }
 
   modal.showModal()
+}
+
+function openSettings() {
+  const themesToggles = document.querySelectorAll("[name='theme']")
+  
+  themesToggles.forEach(function (theme) {
+    if (theme.id == noteTheme) theme.checked = true
+    console.log("here")
+    theme.onclick = function() {
+      updateTheme(theme.id)
+    }
+  })
+  document.getElementById('settings-modal').showModal()
+}
+
+function resetSettings() {
+  updateTheme('theme-classic')
+  openSettings()
 }
 
 function buildDataURI() {

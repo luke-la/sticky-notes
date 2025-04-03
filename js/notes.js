@@ -133,7 +133,7 @@ function addNote(note = null, type = null) {
     addItemInput.placeholder = "Enter task..."
     addItemInput.type = "text"
     addItemInput.maxLength = 25
-    addItemInput.autocomplete = false
+    addItemInput.autocomplete = "off"
 
     addItemButton.textContent = "+"
     addItemButton.onclick = function () {
@@ -174,7 +174,7 @@ function addNote(note = null, type = null) {
     srcInput.name = "Image Url Input"
     srcInput.type = "text"
     srcInput.placeholder = "Image Url..."
-    srcInput.autocomplete = false
+    srcInput.autocomplete = "off"
     srcInput.onblur = function () {
       linkedImage.src = srcInput.value
       note.content = srcInput.value

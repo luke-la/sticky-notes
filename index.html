@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./res/main.css">
   <link rel="stylesheet" href="./res/notes.css">
+  <link rel="stylesheet" href="./res/themes.css">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
   <script defer src="./js/index.js"></script>
   <script src="./js/notes.js"></script>
@@ -74,7 +75,7 @@
         <circle cx="12" cy="18" r="1" stroke-width="0" fill="currentColor" />
       </svg>
     </button>
-    <button title="Settings" onclick="document.getElementById('settings-modal').showModal()">
+    <button title="Settings" onclick="openSettings()">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3" />
         <path d="M 10,2 L 14,2 A 2.5 2.5 0 0 0 18,4 L 20,6 A 2.5 2.5 0 0 0 22,10 L22,14 A 2.5 2.5 0 0 0 20,18 L 18,20 A 2.5 2.5 0 0 0 14,22
@@ -158,6 +159,23 @@
 
     <dialog id="settings-modal">
       <h2>Settings</h2>
+      <form>
+        <fieldset>
+          <legend>Note Theme:</legend>
+          <input type="radio" id="theme-classic" name="theme" />
+          <label for="theme-classic">Classic</label> <br />
+          <input type="radio" id="theme-redandgold" name="theme" />
+          <label for="theme-redandgold">Red and Gold</label> <br />
+          <input type="radio" id="theme-pinkandpurple" name="theme" />
+          <label for="theme-pinkandpurple">Pink and Purple</label> <br />
+          <input type="radio" id="theme-minimal" name="theme" />
+          <label for="theme-minimal">Minimal</label> <br />
+          <input type="radio" id="theme-neon" name="theme" />
+          <label for="theme-neon">Neon</label> <br />
+          <input type="radio" id="theme-rainbow" name="theme" />
+          <label for="theme-rainbow">Rainbow</label> <br />
+        </fieldset>
+      </form>
       <button id="btn-file-accept" onclick="resetSettings()">Reset to Defaults</button>
       <button id="btn-file-cancel" onclick="document.getElementById('settings-modal').close()">Close</button>
     </dialog>
