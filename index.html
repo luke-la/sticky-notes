@@ -13,7 +13,7 @@
 </head>
 <body>
   <header>
-    <button id="btn-boards-list" onclick="toggleBoardsList()">
+    <button id="btn-boards-list">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3">
         <path d="M5,6 L19,6 M5,12 L19,12 M5,18 L19,18" />
       </svg>
@@ -22,7 +22,7 @@
     <ul id="boards-list">
       <li class="permanent-list-item">
         <span class="list-icon">+</span>
-        <button onclick="createNewBoard()">Add New Board</button>
+        <button id="btn-add-board">Add New Board</button>
       </li>
       <li class="permanent-list-item">
         <span class="list-icon">
@@ -31,7 +31,7 @@
             <path d="M8,6 L12,2 L16,6 M12,2 L12,16" />
           </svg>
         </span>
-        <button onclick="uploadBoard()">Add From File</button>
+        <button id="btn-import-board">Add From File</button>
       </li>
       <li class="permanent-list-item">
         <span class="list-icon">
@@ -40,7 +40,7 @@
             <path class="trash-icon-lid" d="M 5,4 L 10,4 L 10,2 L 14,2 L14,4 M 10,4 L 14,4 L 19,4" />
           </svg>
         </span>
-        <button onclick="openTrashModal()">Trash Can</button>
+        <button id="btn-trash-modal">Trash Can</button>
       </li>
     </ul>
 
@@ -49,59 +49,39 @@
       <span id="save-status">saved</span>
     </h2>
 
-    <button title="Save Board" onclick="saveBoard()">
+    <button id="btn-save" title="Save Board">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
         <polygon points="2,2 16,2 22,8 22,22 2,22" />
         <polygon points="8,22 8,16 16,16 16,22" />
       </svg>
     </button>
-    <button title="Download Board" onclick="downloadBoard()">
+    <button id="btn-download" title="Download Board">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
         <path d="M2,14 L2,22 L22,22 L22,14" />
         <path d="M8,12 L12,16 L16,12 M12,16 L12,2" />
       </svg>
     </button>
 
-    <button id="btn-trash" title="Move to Trash" onclick="trashBoard()">
+    <button id="btn-trash" title="Move to Trash">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
         <path d="M 6,8 L 8,22 L 16,22 L 18,8 Z" />
         <path class="trash-icon-lid" d="M 5,4 L 10,4 L 10,2 L 14,2 L14,4 M 10,4 L 14,4 L 19,4" />
       </svg>
     </button>
-    <button title="Help" onclick="document.getElementById('info-modal').showModal()">
+    <button id="btn-help" title="Help">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
         <circle cx="12" cy="12" r="10" />
         <path d="M8,9 A4 3, 0, 0 1, 16,9 C16,12 12,11 12,14" />
         <circle cx="12" cy="18" r="1" stroke-width="0" fill="currentColor" />
       </svg>
     </button>
-    <button title="Settings" onclick="openSettings()">
+    <button id="btn-settings" title="Settings">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3" />
         <path d="M 10,2 L 14,2 A 2.5 2.5 0 0 0 18,4 L 20,6 A 2.5 2.5 0 0 0 22,10 L22,14 A 2.5 2.5 0 0 0 20,18 L 18,20 A 2.5 2.5 0 0 0 14,22
           L 10,22 A 2.5 2.5 0 0 0 6,20 L 4,18 A 2.5 2.5 0 0 0 2,14 L 2,10 A 2.5 2.5 0 0 0 4,6 L6,4 A 2.5 2.5 0 0 0 10,2 Z" />
       </svg>
     </button>
-    <button id="btn-dark-mode" title="Dark Mode" onclick="toggleNightMode()">
-      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12,4 A8 8, 0, 1 0, 20,12 A6 6, 0, 1 1, 12,4" />
-      </svg>
-      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-        <circle cx="12" cy="12" r="6" />
-        <line x1="12" y1="6" x2="12" y2="2" />
-        <line x1="12" y1="18" x2="12" y2="22" />
-      
-        <line x1="6" y1="12" x2="2" y2="12" />
-        <line x1="18" y1="12" x2="22" y2="12" />
-      
-        <line x1="7.7" y1="7.7" x2="4.7" y2="4.7" />
-        <line x1="16.3" y1="7.7" x2="19.3" y2="4.7" />
-      
-        <line x1="7.7" y1="16.3" x2="4.7" y2="19.3" />
-        <line x1="16.3" y1="16.3" x2="19.3" y2="19.3" />
-      </svg>
-    </button>
-
     <div id="toolbar">
       <button onclick="addNote()">Add Note +</button>
       <button onclick="addNote(null, Note.type.checklist)">Add Checklist +</button>
@@ -119,11 +99,11 @@
     <dialog id="trash-modal">
       <p id="trash-message"></p>
       <ul id="trash-list"></ul>
-      <button onclick="document.getElementById('trash-modal').close()">Close</button>
+      <button id="close-trash-modal">Close</button>
     </dialog>
 
     <dialog id="info-modal">
-      <button onclick="document.getElementById('info-modal').close()">close</button>
+      <button id="close-info-modal">close</button>
       <h2>How to Use Sticky Notes</h2>
       <hr />
       <section>
@@ -160,6 +140,28 @@
     <dialog id="settings-modal">
       <h2>Settings</h2>
       <form>
+        <button id="btn-dark-mode" title="Dark Mode">
+          <span id="dark-mode-icon">
+            <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12,4 A8 8, 0, 1 0, 20,12 A6 6, 0, 1 1, 12,4" />
+            </svg>
+            <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="12" cy="12" r="6" />
+              <line x1="12" y1="6" x2="12" y2="2" />
+              <line x1="12" y1="18" x2="12" y2="22" />
+            
+              <line x1="6" y1="12" x2="2" y2="12" />
+              <line x1="18" y1="12" x2="22" y2="12" />
+            
+              <line x1="7.7" y1="7.7" x2="4.7" y2="4.7" />
+              <line x1="16.3" y1="7.7" x2="19.3" y2="4.7" />
+            
+              <line x1="7.7" y1="16.3" x2="4.7" y2="19.3" />
+              <line x1="16.3" y1="16.3" x2="19.3" y2="19.3" />
+            </svg>
+          </span>
+          <span>Toggle Dark Mode</span>
+        </button>    
         <fieldset>
           <legend>Note Theme:</legend>
           <input type="radio" id="theme-classic" name="theme" />
@@ -176,8 +178,8 @@
           <label for="theme-rainbow">Rainbow</label> <br />
         </fieldset>
       </form>
-      <button id="btn-file-accept" onclick="resetSettings()">Reset to Defaults</button>
-      <button id="btn-file-cancel" onclick="document.getElementById('settings-modal').close()">Close</button>
+      <button id="btn-reset-settings">Reset to Defaults</button>
+      <button id="close-settings-modal">Close</button>
     </dialog>
     
     <template id="note-template">

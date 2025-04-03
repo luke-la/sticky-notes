@@ -5,20 +5,46 @@
   --secondary: hsl(210, 5%, 30%);
 }
 
-.night {
+.dark {
   --near-base: hsl(210, 7%, 10%);
   --base: hsl(210, 5%, 15%);
   --primary-text: hsl(0, 0%, 90%);
   --secondary: hsl(0, 0%, 75%);
 }
 
-button#btn-dark-mode > :first-child,
-.night button#btn-dark-mode > :last-child {
-  display: block;
-}
-button#btn-dark-mode > :last-child,
-.night button#btn-dark-mode > :first-child {
+#dark-mode-icon > :first-child,
+.dark #dark-mode-icon > :last-child {
   display: none;
+}
+#dark-mode-icon > :last-child,
+.dark #dark-mode-icon > :first-child {
+  display: inline-block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --near-base: hsl(210, 7%, 10%);
+    --base: hsl(210, 5%, 15%);
+    --primary-text: hsl(0, 0%, 90%);
+    --secondary: hsl(0, 0%, 75%);
+  }
+
+  .dark {
+    --near-base: hsl(0, 0%, 95%);
+    --base: hsl(0, 0%, 87%);
+    --primary-text: hsl(210, 7%, 7%);
+    --secondary: hsl(210, 5%, 30%);
+  }
+
+  #dark-mode-icon > :first-child,
+  .dark #dark-mode-icon > :last-child {
+    display: inline-block;
+  }
+
+  #dark-mode-icon > :last-child,
+  .dark #dark-mode-icon > :first-child {
+    display: none;
+  }
 }
 
 body {
@@ -34,6 +60,10 @@ dialog {
   border: none;
   background-color: var(--base);
   color: var(--primary-text);
+  font-size: 1rem;
+}
+dialog button {
+  font-size: 1rem;
 }
 
 dialog::backdrop {
@@ -47,7 +77,7 @@ header {
   right: 0;
   z-index: 200;
   display: grid;
-  grid-template-columns: repeat(3, max-content) 1fr repeat(4, max-content);
+  grid-template-columns: repeat(3, max-content) 1fr repeat(3, max-content);
   gap: 1rem;
   align-items: center;
   padding: 0.5rem;
@@ -58,6 +88,7 @@ button {
   padding: 0.5rem 1rem;
   border: 2px solid transparent;
   outline: none;
+  align-items: center;
 
   border-radius: 1rem;
   background-color: var(--base);
@@ -66,7 +97,6 @@ button {
   font-family: inherit;
 
   cursor: pointer;
-  transition: 100ms ease
 }
 
 svg {
@@ -161,7 +191,7 @@ span#save-status {
   text-decoration: solid underline var(--primary-text) 2px;
 }
 
-#boards-list span.list-icon {
+#boards-list .list-icon {
   display: inline-block;
   width: 1em;
   text-align: center;

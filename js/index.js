@@ -1,31 +1,13 @@
-let boards = []
-let trash = []
-let notes = []
-let boardName = ""
+let boards, trash, notes, boardName
 let saved = true
+let darkMode, noteTheme
 
-const nightmode = localStorage.getItem("Dark Mode")
-if (nightmode == "active") toggleNightMode()
-
-let noteTheme = localStorage.getItem("noteTheme")
-if (noteTheme) document.querySelector("#noteboard").classList.add(noteTheme)
-else updateTheme("theme-classic")
-
-function updateTheme(newTheme) {
-  document.querySelector("#noteboard").classList.replace(noteTheme, newTheme)
-  noteTheme = newTheme
-  localStorage.setItem("noteTheme", newTheme)
-  console.log("here", newTheme)
-}
-
+// load boards and notes from storage
 const boardsString = localStorage.getItem("boardList")
 boards = (boardsString != null) ? JSON.parse(boardsString) : []
 
 const trashString = localStorage.getItem("trashList")
 trash = (trashString != null) ? JSON.parse(trashString) : []
-
-const list = document.getElementById("boards-list")
-const listButton = document.getElementById("btn-boards-list")
 
 if (boards.length == 0) {
   boards.push("Main Board")
@@ -37,55 +19,12 @@ else {
   else loadBoard(boards[0])
 }
 
-const boardNameInput = document.getElementById("board-name")
-boardNameInput.onblur = function () {
-  const oldName = boardName
-  const newName = boardNameInput.value
-
-  if (newName == oldName) return
-
-  if (boards.some((b) => b == newName)) {
-    boardNameInput.value = oldName
-    alert("You already have a board with that name.")
-    return
-  }
-  
-  saveBoard()
-
-  if (trash.some((b) => b == newName)) {
-    //this might break ~270 years when the digit ticks over to the 14th decimal place
-    newTrashName = "trash" + Date.now()
-    const trashIndex = trash.findIndex((b) => b == newName)
-    trash[trashIndex] = newTrashName
-
-    localStorage.setItem("trashList", JSON.stringify(trash))
-    localStorage.setItem(newTrashName, localStorage.getItem(newName))
-    alert("Your board in trash with the same name has been renamed.")
-  }
-  
-  boardName = newName
-
-  const index = boards.findIndex((b) => b == oldName)
-  boards[index] = boardName
-
-  localStorage.setItem("boardList", JSON.stringify(boards))
-  localStorage.setItem(boardName, localStorage.getItem(oldName))
-  localStorage.removeItem(oldName)
-}
-
-function toggleNightMode() {
-  const night = document.querySelector("body").classList.toggle('night')
-  const nmStatus = (night) ? "active" : null
-  localStorage.setItem("Dark Mode", nmStatus)
-}
-
-function loadBoard(board, overwriteNotes = []) {
+function loadBoard(board) {
   boardName = board
 
   const notesString = localStorage.getItem(board)
-  notes = (notesString != null) ? JSON.parse(notesString) : []
-  if (overwriteNotes.length > 0) notes = overwriteNotes;
-
+  notes = (notesString !== null) ? JSON.parse(notesString) : []
+ 
   document.getElementById("board-name").value = board
 
   const nb = document.getElementById("noteboard")
@@ -96,37 +35,39 @@ function loadBoard(board, overwriteNotes = []) {
       addNote(note)
 
   localStorage.setItem("lastBoard", board)
-  changeSaveStatus(true)
+  setSaveStatus(notesString !== null)
 }
 
-function saveBoard() {
-  localStorage.setItem("boardList", JSON.stringify(boards))
-  localStorage.setItem(boardName, JSON.stringify(notes))
-  changeSaveStatus(true);
+// dark mode
+darkMode = localStorage.getItem("darkMode")
+if (darkMode == "active") toggleDarkMode()
+const btnDarkMode = document.getElementById("btn-dark-mode")
+btnDarkMode.onclick = function (e) {
+  e.preventDefault()
+  toggleDarkMode()
 }
 
-function changeSaveStatus(save = false) {
-  if (saved == save) return;
-
-  saved = save
-  if (save) document.getElementById("save-status").textContent = "saved"
-  else document.getElementById("save-status").textContent = "unsaved"
+function toggleDarkMode() {
+  const night = document.querySelector("body").classList.toggle('dark')
+  const nmStatus = (night) ? "active" : null
+  localStorage.setItem("darkMode", nmStatus)
 }
 
-function createNewBoard(baseName = "untitled board", notes = []) {
-  let newName = baseName
-  let count = 1
-  while (boards.some((b) => b == newName) || trash.some((b) => b == newName))
-    newName = baseName + count++
+// theme
+noteTheme = localStorage.getItem("noteTheme")
+if (noteTheme) document.querySelector("#noteboard").classList.add(noteTheme)
+else updateTheme("theme-classic")
 
-  boards.push(newName)
-  boards.sort()
-  loadBoard(newName, notes)
-  changeSaveStatus()
-  list.style.display = "none"
+function updateTheme(newTheme) {
+  document.querySelector("#noteboard").classList.replace(noteTheme, newTheme)
+  noteTheme = newTheme
+  localStorage.setItem("noteTheme", newTheme)
 }
 
-function toggleBoardsList() {
+// boards list and buttons
+const list = document.getElementById("boards-list")
+const btnBoardsList = document.getElementById("btn-boards-list")
+btnBoardsList.onclick = function () {
   if (list.style.display == "block") {
     list.style.display = "none"
     return
@@ -154,86 +95,41 @@ function toggleBoardsList() {
 
 document.addEventListener("click", function (event) {  
   if (!list.contains(event.target)
-    && !listButton.contains(event.target)) {
-    document.getElementById("boards-list").style.display = "none"
+    && !btnBoardsList.contains(event.target)) {
+    list.style.display = "none"
   }
 })
 
-function openTrashModal() {
-  const modal = document.getElementById("trash-modal")
-
-  const trashList = modal.querySelector("#trash-list")
-
-  const message = modal.querySelector("#trash-message")
-  if (trash.length < 1) message.textContent = "You have no boards in your trash bin."
-  else if (trash.length == 1) message.textContent = "You have one board in your trash bin."
-  else message.textContent = "You have " + trash.length + " boards in your trash bin."
-  
-  trashList.innerHTML = null
-  if (trash.length > 0) {
-    for (let t of trash) {
-      const notesString = localStorage.getItem(t)
-      const noteCount = (notesString != null) ? JSON.parse(notesString).length : 0
-      const item = document.createElement("li")
-      item.textContent = t + " | Notes: " + noteCount
-      trashList.append(item)
-    }
-  }
-
-  modal.showModal()
+// add board button
+const btnAddBoard = document.getElementById("btn-add-board")
+btnAddBoard.onclick = function () {
+  createNewBoard("untitled board")
 }
 
-function openSettings() {
-  const themesToggles = document.querySelectorAll("[name='theme']")
-  
-  themesToggles.forEach(function (theme) {
-    if (theme.id == noteTheme) theme.checked = true
-    console.log("here")
-    theme.onclick = function() {
-      updateTheme(theme.id)
-    }
-  })
-  document.getElementById('settings-modal').showModal()
-}
+// import board button
+const btnImportBoard = document.getElementById("btn-import-board")
+btnImportBoard.onclick = function () {
+  list.style.display = "none"
 
-function resetSettings() {
-  updateTheme('theme-classic')
-  openSettings()
-}
-
-function buildDataURI() {
-  const start = "data:application/json;base64,"
-  const board = {}
-  board.name = boardName
-  board.content = notes
-  const data = btoa(JSON.stringify(board))
-  return start + data
-}
-
-function downloadBoard() {
-  saveBoard()
-  const a = document.createElement("a")
-  a.href = buildDataURI()
-  a.download = boardName
-  document.body.append(a)
-  a.click()
-  document.body.removeChild(a)
-}
-
-function uploadBoard() {
   const dialog = document.getElementById('open-file-modal')
   const input = document.getElementById('file-input')
-  let loadedFile = null;
-  dialog.showModal()
-  document.getElementById("btn-file-accept").onclick = function () {
-    if (input.files[0] == null) {
+  const btnAccept = document.getElementById("btn-file-accept")
+  const btnCancel = document.getElementById("btn-file-cancel")
+
+  input.onchange = function () {
+    btnAccept.disabled = (input.files[0] === null)
+  }
+
+  btnAccept.disabled = true;
+  btnAccept.onclick = function () {
+    if (input.files[0] === null) {
       alert("No file selected.")
       return
     }
 
     const reader = new FileReader()
     reader.onload = function() {
-      loadedFile = JSON.parse(reader.result)
+      const loadedFile = JSON.parse(reader.result)
       if (!loadedFile) {
         alert("The file didn't contain valid JSON.")
         return
@@ -252,17 +148,138 @@ function uploadBoard() {
           file: input.files[0],
         })
     }
-
     reader.readAsText(input.files[0])
     dialog.close()
   }
-  document.getElementById("btn-file-cancel").onclick = function () {
+
+  btnCancel.onclick = function () {
     input.value = null;
     dialog.close()
   }
+
+  dialog.showModal()
 }
 
-function trashBoard() {
+// helper function to create new board (used in both create and import)
+function createNewBoard(baseName, addnotes = []) {
+  let newName = baseName
+  let count = 1
+  while (boards.some((b) => b == newName) || trash.some((b) => b == newName))
+    newName = baseName + count++
+
+  boards.push(newName)
+  boards.sort()
+  localStorage.setItem("boardList", JSON.stringify(boards))
+
+  notes = addnotes;
+  localStorage.setItem(newName, JSON.stringify(notes))
+
+  loadBoard(newName)
+  list.style.display = "none"
+}
+
+// open trash button
+const btnTrashModal = document.getElementById("btn-trash-modal")
+btnTrashModal.onclick = function () {
+  list.style.display = "none"
+  
+  const modal = document.getElementById("trash-modal")
+  const trashList = modal.querySelector("#trash-list")
+  const message = modal.querySelector("#trash-message")
+  
+  if (trash.length < 1) message.textContent = "You have no boards in your trash bin."
+  else if (trash.length == 1) message.textContent = "You have one board in your trash bin."
+  else message.textContent = "You have " + trash.length + " boards in your trash bin."
+  
+  trashList.innerHTML = null
+  if (trash.length > 0) {
+    for (let t of trash) {
+      const notesString = localStorage.getItem(t)
+      const noteCount = (notesString != null) ? JSON.parse(notesString).length : 0
+      const item = document.createElement("li")
+      item.textContent = t + " | Notes: " + noteCount
+      trashList.append(item)
+    }
+  }
+
+  document.getElementById("close-trash-modal").onclick = function () {
+    modal.close()
+  }
+
+  modal.showModal()
+}
+
+// handles board name changes
+const boardNameInput = document.getElementById("board-name")
+boardNameInput.onblur = function () {
+  const oldName = boardName
+  const newName = boardNameInput.value
+
+  // if no change was made, do nothing
+  if (newName == oldName) return
+
+  // if there is already a board with that name, alert user and do nothing
+  if (boards.some((b) => b == newName)) {
+    boardNameInput.value = oldName
+    alert("You already have a board with that name.")
+    return
+  }
+
+  // if there is a board in trash with that name, rename the board in trash and alert user
+  if (trash.some((b) => b == newName)) {
+    newTrashName = "trash" + Date.now() // might break ~270 years when the digit ticks over to the 14th decimal place
+    const trashIndex = trash.findIndex((b) => b == newName)
+    trash[trashIndex] = newTrashName
+
+    localStorage.setItem("trashList", JSON.stringify(trash))
+    localStorage.setItem(newTrashName, localStorage.getItem(newName))
+    alert("Your board in trash with the same name has been renamed.")
+  }
+  
+  // rename board and move it's storage over to be held under the new name
+  boardName = newName
+
+  const index = boards.findIndex((b) => b == oldName)
+  boards[index] = boardName
+
+  localStorage.setItem("boardList", JSON.stringify(boards))
+  localStorage.setItem(boardName, localStorage.getItem(oldName))
+  localStorage.removeItem(oldName)
+}
+
+const btnSave = document.getElementById("btn-save")
+btnSave.onclick = function () {
+  localStorage.setItem(boardName, JSON.stringify(notes))
+  setSaveStatus(true)
+}
+
+// helper function to set save status
+function setSaveStatus(newSaveStatus) {
+  if (saved === newSaveStatus) return;
+
+  saved = newSaveStatus
+  if (saved) document.getElementById("save-status").textContent = "saved"
+  else document.getElementById("save-status").textContent = "unsaved"
+}
+
+const btnDownload = document.getElementById("btn-download")
+btnDownload.onclick = function () {
+  const a = document.createElement("a")
+  let dataURI = "data:application/json;base64,"
+  dataURI += btoa(JSON.stringify({
+    name: boardName,
+    content: notes
+  }))
+  a.href = dataURI
+  a.download = boardName
+  document.body.append(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
+// send board to trash
+const btnTrash = document.getElementById("btn-trash")
+btnTrash.onclick = function () {
   const result = confirm("Are you sure you want to move your '" +
     boardName +
     "' board to trash?")
@@ -277,6 +294,37 @@ function trashBoard() {
   }
 }
 
+// open/close info modal
+document.getElementById("btn-help").onclick = function () {
+  document.getElementById('info-modal').showModal()
+}
+document.getElementById("close-info-modal").onclick = function () {
+  document.getElementById('info-modal').close()
+}
+
+// populate settings modal
+const themesToggles = document.querySelectorAll("[name='theme']")
+themesToggles.forEach(function (theme) {
+  if (theme.id == noteTheme) theme.checked = true
+  theme.onclick = function() {
+    updateTheme(theme.id)
+  }
+})
+// reset settings
+const btnResetSettings = document.getElementById("btn-reset-settings")
+btnResetSettings.onclick = function () {
+  updateTheme("theme-classic")
+  themesToggles.forEach(function (theme) {
+    if (theme.id == noteTheme) theme.checked = true
+  })
+}
+// open/close settings modal
+document.getElementById("btn-settings").onclick = function () {
+  document.getElementById('settings-modal').showModal()
+}
+document.getElementById("close-settings-modal").onclick = function() {
+  document.getElementById('settings-modal').close()
+}
 
 function deleteBoard() {
   const result = prompt("Are you sure you want to permenantly delete your '" +

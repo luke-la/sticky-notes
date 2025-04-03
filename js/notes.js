@@ -24,7 +24,7 @@ function addNote(note = null, type = null) {
     note = new Note()
     note.type = type
     notes.push(note)
-    changeSaveStatus()
+    setSaveStatus(false)
   }
 
   const template = document.getElementById("note-template")
@@ -65,7 +65,7 @@ function addNote(note = null, type = null) {
       document.onmouseup = null
       note.position.x = noteDiv.style.left.slice(0, -2)
       note.position.y = noteDiv.style.top.slice(0, -2)
-      changeSaveStatus()
+      setSaveStatus(false)
     }
   }
   grip.ondblclick = function () {
@@ -79,7 +79,7 @@ function addNote(note = null, type = null) {
 
     // adjust dom
     document.getElementById("noteboard").append(noteDiv)
-    changeSaveStatus()
+    setSaveStatus(false)
   }
 
   const noteTitle = noteDiv.querySelector("input")
@@ -88,7 +88,7 @@ function addNote(note = null, type = null) {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     if (notes[currentIndex].title != noteTitle.value) {
       notes[currentIndex].title = noteTitle.value;
-      changeSaveStatus()
+      setSaveStatus(false)
     }
   }
   
@@ -105,7 +105,7 @@ function addNote(note = null, type = null) {
     else noteFavorite.textContent = "\u2606"
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes[currentIndex].fav = fav
-    changeSaveStatus()
+    setSaveStatus(false)
   }
 
   const noteDiscard = noteDiv.querySelector("button[title='Discard']")
@@ -113,7 +113,7 @@ function addNote(note = null, type = null) {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes.splice(currentIndex, 1)
     document.getElementById("noteboard").removeChild(noteDiv)
-    changeSaveStatus()
+    setSaveStatus(false)
   }
 
   const noteContent = noteDiv.querySelector(".note-content")
@@ -156,7 +156,7 @@ function addNote(note = null, type = null) {
 
       noteList.append(listItem)
       note.content = noteList.innerHTML
-      changeSaveStatus()
+      setSaveStatus(false)
     }
 
     function checkedChanged (e) {
@@ -164,7 +164,7 @@ function addNote(note = null, type = null) {
       if (element.checked) element.setAttribute("checked", "checked")
       else element.removeAttribute("checked")
       note.content = noteList.innerHTML
-      changeSaveStatus()
+      setSaveStatus(false)
     }
   }
   else if (note.type == Note.type.image) {
@@ -178,7 +178,7 @@ function addNote(note = null, type = null) {
     srcInput.onblur = function () {
       linkedImage.src = srcInput.value
       note.content = srcInput.value
-      changeSaveStatus()
+      setSaveStatus(false)
     }
     srcInput.value = note.content
     linkedImage.src = srcInput.value
@@ -198,7 +198,7 @@ function addNote(note = null, type = null) {
     noteText.onblur = function () {
       if (note.content != noteText.value) {
         note.content = noteText.value
-        changeSaveStatus()
+        setSaveStatus(false)
       }
     }
   }
