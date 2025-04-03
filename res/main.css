@@ -62,8 +62,13 @@ dialog {
   color: var(--primary-text);
   font-size: 1rem;
 }
+
 dialog button {
   font-size: 1rem;
+}
+
+dialog form ol {
+  list-style: none;
 }
 
 dialog::backdrop {

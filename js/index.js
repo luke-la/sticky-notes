@@ -1,6 +1,6 @@
 let boards, trash, notes, boardName
 let saved = true
-let darkMode, noteTheme
+let darkMode, noteTheme, showNoteOrder
 
 // load boards and notes from storage
 const boardsString = localStorage.getItem("boardList")
@@ -40,7 +40,7 @@ function loadBoard(board) {
 
 // dark mode
 darkMode = localStorage.getItem("darkMode")
-if (darkMode == "active") toggleDarkMode()
+if (darkMode === "active") toggleDarkMode()
 const btnDarkMode = document.getElementById("btn-dark-mode")
 btnDarkMode.onclick = function (e) {
   e.preventDefault()
@@ -62,6 +62,21 @@ function updateTheme(newTheme) {
   document.querySelector("#noteboard").classList.replace(noteTheme, newTheme)
   noteTheme = newTheme
   localStorage.setItem("noteTheme", newTheme)
+}
+
+// note order
+const ckbShowNoteOrder = document.getElementById("ckb-show-note-order")
+ckbShowNoteOrder.onchange = toggleShowNoteOrder
+showNoteOrder = localStorage.getItem("showNoteOrder")
+if (showNoteOrder === "display") {
+  toggleShowNoteOrder()
+  ckbShowNoteOrder.checked = true
+}
+
+function toggleShowNoteOrder()  {
+  const shown = document.querySelector("body").classList.toggle('note-order-shown')
+  const shownStatus = (shown) ? "display" : null
+  localStorage.setItem("showNoteOrder", shownStatus)
 }
 
 // boards list and buttons
@@ -342,3 +357,15 @@ function deleteBoard() {
   else alert("You did not enter the correct name. If you wish to delete your board, please try again.")
 }
 
+// toolbar buttons 
+const buttons = document.querySelectorAll("#toolbar > button")
+console.log(buttons)
+buttons[0].onclick = function () {
+  addNote()
+}
+buttons[1].onclick = function () {
+  addNote(null, Note.type.checklist)
+}
+buttons[2].onclick = function () {
+  addNote(null, Note.type.image)
+}

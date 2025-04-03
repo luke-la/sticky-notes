@@ -1,4 +1,13 @@
 /* Generic Note Styles */
+.note-order-shown #noteboard {
+  counter-reset: note;
+}
+
+.note-order-shown .note::before {
+  counter-increment: note;
+  content: "-" counter(note) "";
+  position: absolute;
+}
 
 .note {
   /* backup styling in case a theme doesn't load properly */
@@ -103,6 +112,10 @@
 
 .note input[type="checkbox"]:checked + label {
   text-decoration: line-through solid currentColor;
+}
+
+.note input[name="Add Checklist Item"] {
+  width: 25ch
 }
 
 .note img {

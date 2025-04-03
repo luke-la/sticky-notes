@@ -83,9 +83,9 @@
       </svg>
     </button>
     <div id="toolbar">
-      <button onclick="addNote()">Add Note +</button>
-      <button onclick="addNote(null, Note.type.checklist)">Add Checklist +</button>
-      <button onclick="addNote(null, Note.type.image)">Add Image +</button>
+      <button>Add Note +</button>
+      <button>Add Checklist +</button>
+      <button>Add Image +</button>
     </div>
   </header>
 
@@ -140,42 +140,68 @@
     <dialog id="settings-modal">
       <h2>Settings</h2>
       <form>
-        <button id="btn-dark-mode" title="Dark Mode">
-          <span id="dark-mode-icon">
-            <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12,4 A8 8, 0, 1 0, 20,12 A6 6, 0, 1 1, 12,4" />
-            </svg>
-            <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              <circle cx="12" cy="12" r="6" />
-              <line x1="12" y1="6" x2="12" y2="2" />
-              <line x1="12" y1="18" x2="12" y2="22" />
-            
-              <line x1="6" y1="12" x2="2" y2="12" />
-              <line x1="18" y1="12" x2="22" y2="12" />
-            
-              <line x1="7.7" y1="7.7" x2="4.7" y2="4.7" />
-              <line x1="16.3" y1="7.7" x2="19.3" y2="4.7" />
-            
-              <line x1="7.7" y1="16.3" x2="4.7" y2="19.3" />
-              <line x1="16.3" y1="16.3" x2="19.3" y2="19.3" />
-            </svg>
-          </span>
-          <span>Toggle Dark Mode</span>
-        </button>    
         <fieldset>
-          <legend>Note Theme:</legend>
-          <input type="radio" id="theme-classic" name="theme" />
-          <label for="theme-classic">Classic</label> <br />
-          <input type="radio" id="theme-redandgold" name="theme" />
-          <label for="theme-redandgold">Red and Gold</label> <br />
-          <input type="radio" id="theme-pinkandpurple" name="theme" />
-          <label for="theme-pinkandpurple">Pink and Purple</label> <br />
-          <input type="radio" id="theme-minimal" name="theme" />
-          <label for="theme-minimal">Minimal</label> <br />
-          <input type="radio" id="theme-neon" name="theme" />
-          <label for="theme-neon">Neon</label> <br />
-          <input type="radio" id="theme-rainbow" name="theme" />
-          <label for="theme-rainbow">Rainbow</label> <br />
+          <legend>Display:</legend>
+          <ol>
+            <li>
+              <span id="dark-mode-icon">
+                <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12,4 A8 8, 0, 1 0, 20,12 A6 6, 0, 1 1, 12,4" />
+                </svg>
+                <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                  <circle cx="12" cy="12" r="6" />
+                  <line x1="12" y1="6" x2="12" y2="2" />
+                  <line x1="12" y1="18" x2="12" y2="22" />
+                
+                  <line x1="6" y1="12" x2="2" y2="12" />
+                  <line x1="18" y1="12" x2="22" y2="12" />
+                
+                  <line x1="7.7" y1="7.7" x2="4.7" y2="4.7" />
+                  <line x1="16.3" y1="7.7" x2="19.3" y2="4.7" />
+                
+                  <line x1="7.7" y1="16.3" x2="4.7" y2="19.3" />
+                  <line x1="16.3" y1="16.3" x2="19.3" y2="19.3" />
+                </svg>
+              </span>
+              <button id="btn-dark-mode" title="Dark Mode">
+                <span>Toggle Dark Mode</span>
+              </button>
+            </li>
+            <hr />
+            <lI>
+              <input type="checkbox" id="ckb-show-note-order" />
+              <label for="ckb-show-note-order">Display Note Order</label>
+            </lI>
+          </ol>
+        </fieldset>   
+        <fieldset>
+          <legend>Theme:</legend>
+          <ol>
+            <li>
+              <input type="radio" id="theme-classic" name="theme" />
+              <label for="theme-classic">Classic</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-redandgold" name="theme" />
+              <label for="theme-redandgold">Red and Gold</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-pinkandpurple" name="theme" />
+              <label for="theme-pinkandpurple">Pink and Purple</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-minimal" name="theme" />
+              <label for="theme-minimal">Minimal</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-neon" name="theme" />
+              <label for="theme-neon">Neon</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-rainbow" name="theme" />
+              <label for="theme-rainbow">Rainbow</label>
+            </li>
+          </ol>
         </fieldset>
       </form>
       <button id="btn-reset-settings">Reset to Defaults</button>
