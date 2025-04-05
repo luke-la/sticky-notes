@@ -5,49 +5,230 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./res/main.css">
   <link rel="stylesheet" href="./res/notes.css">
+  <link rel="stylesheet" href="./res/themes.css">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-  <script src="./js/index.js"></script>
+  <script defer src="./js/index.js"></script>
   <script src="./js/notes.js"></script>
   <title>Sticky Notes</title>
 </head>
-<body onload="load()">
+<body>
   <header>
-    <button disabled>&equiv;</button>
-    <h2 id="board-name">[board title]</h2>
-    <button title="Save Current Board" onclick="saveBoard()">Save</button>
-    <button onclick="document.getElementById('info-modal').showModal()" title="Help">&#9432;</button>
-    <button disabled>&#x2699;</button>
-    <button title="Toggle Dark Mode" onclick="toggleNightMode()">&#x263E;</button>
+    <button id="btn-boards-list">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3">
+        <path d="M5,6 L19,6 M5,12 L19,12 M5,18 L19,18" />
+      </svg>
+    </button>
+
+    <ul id="boards-list">
+      <li class="permanent-list-item">
+        <span class="list-icon">+</span>
+        <button id="btn-add-board">Add New Board</button>
+      </li>
+      <li class="permanent-list-item">
+        <span class="list-icon">
+          <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M2,14 L2,22 L22,22 L22,14" />
+            <path d="M8,6 L12,2 L16,6 M12,2 L12,16" />
+          </svg>
+        </span>
+        <button id="btn-import-board">Add From File</button>
+      </li>
+      <li class="permanent-list-item">
+        <span class="list-icon">
+          <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M 6,8 L 8,22 L 16,22 L 18,8 Z" />
+            <path class="trash-icon-lid" d="M 5,4 L 10,4 L 10,2 L 14,2 L14,4 M 10,4 L 14,4 L 19,4" />
+          </svg>
+        </span>
+        <button id="btn-trash-modal">Trash Can</button>
+      </li>
+    </ul>
+
+    <h2>
+      <input id="board-name" autocomplete="off" value="Main Board" maxlength="18" />
+      <span id="save-status">saved</span>
+    </h2>
+
+    <button id="btn-save" title="Save Board">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+        <polygon points="2,2 16,2 22,8 22,22 2,22" />
+        <polygon points="8,22 8,16 16,16 16,22" />
+      </svg>
+    </button>
+    <button id="btn-download" title="Download Board">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M2,14 L2,22 L22,22 L22,14" />
+        <path d="M8,12 L12,16 L16,12 M12,16 L12,2" />
+      </svg>
+    </button>
+
+    <button id="btn-trash" title="Move to Trash">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M 6,8 L 8,22 L 16,22 L 18,8 Z" />
+        <path class="trash-icon-lid" d="M 5,4 L 10,4 L 10,2 L 14,2 L14,4 M 10,4 L 14,4 L 19,4" />
+      </svg>
+    </button>
+    <button id="btn-help" title="Help">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M8,9 A4 3, 0, 0 1, 16,9 C16,12 12,11 12,14" />
+        <circle cx="12" cy="18" r="1" stroke-width="0" fill="currentColor" />
+      </svg>
+    </button>
+    <button id="btn-settings" title="Settings">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M 10,2 L 14,2 A 2.5 2.5 0 0 0 18,4 L 20,6 A 2.5 2.5 0 0 0 22,10 L22,14 A 2.5 2.5 0 0 0 20,18 L 18,20 A 2.5 2.5 0 0 0 14,22
+          L 10,22 A 2.5 2.5 0 0 0 6,20 L 4,18 A 2.5 2.5 0 0 0 2,14 L 2,10 A 2.5 2.5 0 0 0 4,6 L6,4 A 2.5 2.5 0 0 0 10,2 Z" />
+      </svg>
+    </button>
+    <div id="toolbar">
+      <button>Add Note +</button>
+      <button>Add Checklist +</button>
+      <button>Add Image +</button>
+    </div>
   </header>
 
-  <div id="toolbar">
-    <button onclick="addNote()">+ New Note</button>
-  </div>
+  <main>
+    <dialog id="open-file-modal">
+      <input id="file-input" type="file" accept=".json,application/json" />
+      <button id="btn-file-accept">Accept</button>
+      <button id="btn-file-cancel">Cancel</button>
+    </dialog>
 
-  <main id="noteboard">
+    <dialog id="trash-modal">
+      <p id="trash-message"></p>
+      <ul id="trash-list"></ul>
+      <button id="close-trash-modal">Close</button>
+    </dialog>
 
     <dialog id="info-modal">
-      <button onclick="document.getElementById('info-modal').close()">close</button>
+      <button id="close-info-modal">close</button>
       <h2>How to Use Sticky Notes</h2>
+      <hr />
       <section>
-        <p>Description of button to add new note and dragability</p>
-        <p>Additional features like...</p>
-        <p>Creating additional boards.</p>
+        <h3>Creating Notes</h3>
+        <p>Clicking the add note button at the top of the screen will create a new note.</p>
+        <p>Click the note's fields to change the data.</p>
+        <p>Each note has a favorite button which will change it's background color to something more visible, and has a delete button which will remove it.</p>
+        <p>Notes can be repositioned by clicking and holding the colored bar at the top of the note and draging it to a new position</p>
+      </section>
+      <section>
+        <h3>Board Options</h3>
+        <p>You can change the name of your current board by clicking it's tilte on the header bar.</p>
+        <p>You will also want to click the save button in order for your notes contents to be saved to local storage.</p>
+        <p>If you want to back up your boards, you can download them as JSON files.</p>
+        <p>The hamburger menu at the top left of the screen allows you to create new moad</p>
         <p>Backing up data</p>
       </section>
+      <section>
+        <h3>Additional Settings</h3>
+        <p>Some of the following features are not yet implemented</p>
+        <dl>
+          <dt>Dark Mode</dt>
+          <dd>Clicking the top left button will toggle a dark background and light text, though the colors of the sticky notes will remain unchanged.</dd>
+          <dt>(TODO) Display Note Order</dt>
+          <dd>When this option is selected, the in which notes appear in thier list is displayed in the corner of the note. This can be inportant for tab order, and for which notes diplay on top of one another.</dd>
+          <dt>(TODO) Sticky Note Theme</dt>
+          <dd>Select a theme for the background colors of the sticky notes.</dd>
+          <dt>(TODO) </dt>
+          <dd></dd>
+        </dl>
+      </section>
+    </dialog>
+
+    <dialog id="settings-modal">
+      <h2>Settings</h2>
+      <form>
+        <fieldset>
+          <legend>Display:</legend>
+          <ol>
+            <li>
+              <span id="dark-mode-icon">
+                <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12,4 A8 8, 0, 1 0, 20,12 A6 6, 0, 1 1, 12,4" />
+                </svg>
+                <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                  <circle cx="12" cy="12" r="6" />
+                  <line x1="12" y1="6" x2="12" y2="2" />
+                  <line x1="12" y1="18" x2="12" y2="22" />
+                
+                  <line x1="6" y1="12" x2="2" y2="12" />
+                  <line x1="18" y1="12" x2="22" y2="12" />
+                
+                  <line x1="7.7" y1="7.7" x2="4.7" y2="4.7" />
+                  <line x1="16.3" y1="7.7" x2="19.3" y2="4.7" />
+                
+                  <line x1="7.7" y1="16.3" x2="4.7" y2="19.3" />
+                  <line x1="16.3" y1="16.3" x2="19.3" y2="19.3" />
+                </svg>
+              </span>
+              <button id="btn-dark-mode" title="Dark Mode">
+                <span>Toggle Dark Mode</span>
+              </button>
+            </li>
+            <hr />
+            <li>
+              <label for="ckb-show-note-order">Display Note Order</label>
+              <input type="checkbox" id="ckb-show-note-order" />
+            </li>
+            <li>
+              <label for="ckb-grid-snapping">Grid Snapping</label>
+              <input type="checkbox" id="ckb-grid-snapping" />
+            </li>
+            <li>
+              <label for="grid-size">Grid Size (px): </label>
+              <input type="number" id="grid-size" min="5" max="25" inputmode="numeric"/>
+            </li>
+          </ol>
+        </fieldset>   
+        <fieldset>
+          <legend>Theme:</legend>
+          <ol>
+            <li>
+              <input type="radio" id="theme-classic" name="theme" />
+              <label for="theme-classic">Classic</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-redandgold" name="theme" />
+              <label for="theme-redandgold">Red and Gold</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-pinkandpurple" name="theme" />
+              <label for="theme-pinkandpurple">Pink and Purple</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-minimal" name="theme" />
+              <label for="theme-minimal">Minimal</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-neon" name="theme" />
+              <label for="theme-neon">Neon</label>
+            </li>
+            <li>
+              <input type="radio" id="theme-rainbow" name="theme" />
+              <label for="theme-rainbow">Rainbow</label>
+            </li>
+          </ol>
+        </fieldset>
+      </form>
+      <button id="btn-reset-settings">Reset to Defaults</button>
+      <button id="close-settings-modal">Close</button>
     </dialog>
     
     <template id="note-template">
       <div class="note">
         <span class="drag-grip"></span>
-        <div>
-          <input name="Note Title" autocomplete="off" placeholder="Unnamed Note" maxlength="25"></input>
+        <div class="note-header">
+          <input name="Note Name" class="note-name" type="text" autocomplete="off" placeholder="Unnamed Note" maxlength="25">
           <button title="Favorite"></button>
           <button title="Discard">&cross;</button>
         </div>
-        <textarea name="Note Content" autocomplete="off" rows="10" placeholder="Your text here..."></textarea>
+        <div class="note-content"></div>
       </div>
     </template>
+
+    <div id="noteboard"></div>
   </main>
 </body>
 </html>

@@ -1,16 +1,44 @@
-.note {
-  position: absolute;
-  padding: 0.75rem;
-  background-color: lightblue;
-  color: black;
-  box-shadow: 0px 0px 4px 2px #0005;
+/* Generic Note Styles */
+.note-order-shown #noteboard {
+  counter-reset: note;
 }
 
-.drag-grip {
+.note-order-shown .note::before {
+  counter-increment: note;
+  content: "-" counter(note) "";
+  position: absolute;
+}
+
+.note {
+  /* backup styling in case a theme doesn't load properly */
+  --normal-bg: lightblue;
+  --normal-deco: cornflowerblue;
+  --favorite-bg: gold;
+  --favorite-deco: goldenrod;
+  position: absolute;
+  padding: 0.75rem;
+  background-color: var(--normal-bg);
+  color: black;
+  box-shadow: 2px 2px 4px 2px #0005;
+  border: 2px solid transparent;
+  max-width: 400px;
+}
+
+.note.favorite {
+  background-color: var(--favorite-bg);
+  z-index: 25;
+}
+
+.note .drag-grip {
   display: block;
   height: 2rem;
-  background-color: cornflowerblue;
+  border: 2px solid transparent;
+  background-color: var(--normal-deco);
   cursor: grab;
+}
+
+.note.favorite .drag-grip {
+  background-color: var(--favorite-deco);
 }
 
 .drag-grip:active {
@@ -18,55 +46,15 @@
 }
 
 .note ::placeholder {
-  color: hsl(223, 45%, 35%);
+  color: hsla(0, 0%, 0%, 70%);
 }
 
-.note.favorite {
-  background-color: gold;
-  z-index: 25;
-}
-
-.note.favorite .drag-grip {
-  background-color: goldenrod;
-}
-
-.note.favorite ::placeholder {
-  color: hsl(43, 70%, 30%);
-}
-
-.note div {
+.note div.note-header {
   width: max-content;
   height: 40px;
 }
 
-.note input,
-.note button,
-.note textarea {
-  outline: none;
-  border: none;
-  background-color: transparent;
-  font-weight: normal;
-}
-.note input:focus,
-.note textarea:focus {
-  text-decoration: solid underline black;
-}
-.note button:hover,
-.note button:focus-visible {
-  text-decoration: solid underline black;
-}
-.note button:active {
-  background-color: black;
-  color: white;
-}
-
-.note input {
-  width: 18rem;
-  font-family: inherit;
-  font-size: 1.25rem;
-}
-
-.note button {
+.note div.note-header button {
   width: 2.5rem;
   aspect-ratio: 1 / 1;
   padding: 0;
@@ -74,11 +62,69 @@
   font-size: 1.5rem;
 }
 
+.note input,
+.note button,
+.note textarea {
+  outline: none;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  color: inherit;
+  font-weight: normal;
+  font-size: 1rem;
+  font-family: inherit;
+}
+.note input:focus,
+.note textarea:focus {
+  text-decoration: dotted underline currentColor;
+}
+.note button:hover,
+.note button:focus-visible {
+  text-decoration: solid underline currentColor;
+}
+.note button:active {
+  background-color: black;
+  color: white;
+}
+
+.note input.note-name {
+  width: 18rem;
+  font-family: inherit;
+  font-size: 1.25rem;
+}
+
 .note textarea {
   width: 100%;
   padding: 0;
   resize: none;
   font-size: 1rem;
+}
+
+.note ul {
+  list-style: none;
+  padding: 0;
+}
+
+.note input[type="checkbox"] {
+  accent-color: black;
+  margin: 0.5rem 1rem;
+}
+
+.note input[type="checkbox"]:checked + label {
+  text-decoration: line-through solid currentColor;
+}
+
+.note input[name="Add Checklist Item"] {
+  width: 25ch
+}
+
+.note img {
+  display: block;
+  width: 100%;
+}
+
+.note input[name="Image Url Input"] {
+  width: 100%
 }
 
 .note:focus-within {

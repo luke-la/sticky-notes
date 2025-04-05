@@ -1,0 +1,107 @@
+/* THEME CLASSIC */
+
+.theme-classic .note {
+  --normal-bg: lightblue;
+  --normal-deco: cornflowerblue;
+  --favorite-bg: gold;
+  --favorite-deco: goldenrod;
+}
+
+/* THEME RED AND GOLD */
+
+.theme-redandgold .note {
+  --normal-bg: gold;
+  --normal-deco: goldenrod;
+  --favorite-bg: red;
+  --favorite-deco: darkred;
+}
+
+/* THEME PINK AND PURPLE */
+
+.theme-pinkandpurple .note {
+  --normal-bg: pink;
+  --normal-deco: #d8b;
+  --favorite-bg: orchid;
+  --favorite-deco: darkorchid;
+}
+
+/* THEME MINIMAL */
+
+.theme-minimal .note {
+  --normal-bg: lightgray;
+  --normal-deco: lightgray;
+  --favorite-bg: lightslategray;
+  --favorite-deco: lightslategray;
+}
+
+/* THEME NEON */
+
+.theme-neon {
+  background-color: black;
+}
+
+.theme-neon .note {
+  --normal-bg: hsl(220, 50%, 5%);
+  --normal-deco: lightblue;
+  --favorite-bg: hsl(30, 50%, 5%);
+  --favorite-deco: goldenrod;
+  color: white;
+}
+
+.theme-neon .note,
+.theme-neon .note .drag-grip {
+  background-color: var(--normal-bg);
+  border-color: white;
+  border-radius: 1rem;
+  box-shadow:
+    0px 0px 4px white,
+    0px 0px 12px var(--normal-deco);
+}
+
+.theme-neon .note.favorite,
+.theme-neon .note.favorite .drag-grip {
+  background-color: var(--favorite-bg);
+  box-shadow: 
+    0px 0px 6px white,
+    0px 0px 18px var(--favorite-deco);
+}
+
+.theme-neon .note ::placeholder {
+  color: hsla(0, 0%, 100%, 70%);
+}
+
+/* THEME RAINBOW */
+
+.theme-rainbow .note {
+  --normal-deco: transparent;
+  --favorite-deco: transparent;
+}
+
+.theme-rainbow .note:nth-child(6n-5) {
+  --normal-bg: red;
+}
+.theme-rainbow .note:nth-child(6n-4) {
+  --normal-bg: orange;
+}
+.theme-rainbow .note:nth-child(6n-3) {
+  --normal-bg: yellow;
+}
+.theme-rainbow .note:nth-child(6n-2) {
+  --normal-bg: lightgreen;
+}
+.theme-rainbow .note:nth-child(6n-1) {
+  --normal-bg: lightblue;
+}
+.theme-rainbow .note:nth-child(6n) {
+  --normal-bg: orchid
+}
+
+.theme-rainbow .note.favorite {
+  background-image: linear-gradient(to bottom, red, orange, yellow, lightgreen, lightblue, orchid);
+  border-color: black;
+}
+
+.theme-rainbow .note .drag-grip {
+  background-image: radial-gradient(circle at 0.25rem 0.25rem, black 0.125rem, transparent 0);
+  background-size: 0.5rem 0.5rem;
+}

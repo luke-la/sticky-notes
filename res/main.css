@@ -1,25 +1,83 @@
 :root {
-  --base: hsl(0, 0%, 90%);
-  --primary-text: hsl(210, 7%, 10%);
-  --secondary: hsl(210, 5%, 30%);
+  --near-base: hsl(0, 0%, 95%);
+  --base: hsl(0, 0%, 87%);
+  --primary-text: hsl(210, 7%, 7%);
+  --secondary: hsl(210, 5%, 25%);
 }
-.night {
-  --base: hsl(210, 7%, 10%);
+
+.dark {
+  --near-base: hsl(210, 7%, 10%);
+  --base: hsl(210, 5%, 15%);
   --primary-text: hsl(0, 0%, 90%);
   --secondary: hsl(0, 0%, 75%);
 }
 
+#dark-mode-icon > :first-child,
+.dark #dark-mode-icon > :last-child {
+  display: none;
+}
+#dark-mode-icon > :last-child,
+.dark #dark-mode-icon > :first-child {
+  display: inline-block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --near-base: hsl(210, 7%, 10%);
+    --base: hsl(210, 5%, 15%);
+    --primary-text: hsl(0, 0%, 90%);
+    --secondary: hsl(0, 0%, 75%);
+  }
+
+  .dark {
+    --near-base: hsl(0, 0%, 95%);
+    --base: hsl(0, 0%, 87%);
+    --primary-text: hsl(210, 7%, 7%);
+    --secondary: hsl(210, 5%, 30%);
+  }
+
+  #dark-mode-icon > :first-child,
+  .dark #dark-mode-icon > :last-child {
+    display: inline-block;
+  }
+
+  #dark-mode-icon > :last-child,
+  .dark #dark-mode-icon > :first-child {
+    display: none;
+  }
+}
+
 body {
-  background-color: var(--base);
+  background-color: var(--near-base);
   color: var(--primary-text);
   font: 1rem monospace;
 }
 
+:disabled {
+  color: gray;
+  cursor: auto;
+}
+
 dialog {
-  border: 2px solid var(--primary-text);
-  border-radius: 1rem;
+  max-width: 70ch;
+  max-height: 80%;
+  padding: 2rem;
+  border: none;
   background-color: var(--base);
   color: var(--primary-text);
+  font-size: 1rem;
+}
+
+dialog button {
+  font-size: 1rem;
+}
+
+dialog form ol {
+  list-style: none;
+}
+
+dialog::backdrop {
+  background-color: hsla(0, 0%, 0%, 50%);
 }
 
 header {
@@ -27,43 +85,83 @@ header {
   top: 0;
   left: 0;
   right: 0;
+  z-index: 200;
   display: grid;
-  grid-template-columns: max-content max-content 1fr max-content max-content max-content;
-  align-items:center;
+  grid-template-columns: repeat(3, max-content) 1fr repeat(3, max-content);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: var(--base);
 }
 
 button {
   padding: 0.5rem 1rem;
   border: 2px solid transparent;
   outline: none;
+  align-items: center;
 
   border-radius: 1rem;
-  background-color: inherit;
-  color: inherit;
+  background-color: var(--base);
+  color: var(--primary-text);
   font-weight: bold;
+  font-family: inherit;
 
-  cursor: pointer
+  cursor: pointer;
 }
 
-button:hover,
+svg {
+  display: block;
+  margin: 0 auto;
+}
+
+svg .trash-icon-lid {
+  transition: 0.2s ease;
+  transform-origin: 50% 50%;
+}
+
+button#btn-trash:hover svg .trash-icon-lid {
+  transform: rotate(20deg);
+}
+
+button:hover:not(:disabled),
 button:focus-visible {
   border-color: var(--primary-text);
 }
 
-button:active {
+button:active:not(:disabled) {
   background-color: var(--primary-text);
   color: var(--base);
 }
 
-header * {
-  margin: 0.5rem 1rem;
-}
-
-header button{
+header > button {
   width: 2.5rem;
   aspect-ratio: 1 / 1;
   padding: 0;
   font-size: 1.5rem;
+}
+
+header > h2 {
+  margin: 0;
+}
+
+header > h2 > input {
+  width: 18ch;
+  outline: none;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  background-color: inherit;
+  color: inherit;
+  font: inherit;
+}
+
+header > h2 > input:focus {
+  border-color: var(--primary-text);
+}
+
+span#save-status {
+  display: inline-block;
+  width: max-content;
+  font-size: 1rem;
 }
 
 #toolbar {
@@ -71,8 +169,40 @@ header button{
   top: 70px;
   left: 0;
   right: 0;
-  display: grid;
-  grid-template-columns:  max-content;
+  z-index: 200;
+  display: flex;
+  gap: 1rem;
   justify-content: center;
   align-items: baseline;
+}
+
+#boards-list {
+  position: fixed;
+  background-color: var(--base);
+  top: 56px;
+  left: 0;
+  z-index: 250;
+  display: none;
+  height: calc(100vh - 56px - 1rem);
+  overflow: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0 2rem 1rem;
+  border-radius: 0 0 1rem 1rem;
+}
+
+#boards-list li {
+  margin: 0.5rem 0;
+}
+
+#boards-list li:not(.permanent-list-item) button:hover, 
+#boards-list li:not(.permanent-list-item) button:focus-visible {
+  border-color: transparent;
+  text-decoration: solid underline var(--primary-text) 2px;
+}
+
+#boards-list .list-icon {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
 }
