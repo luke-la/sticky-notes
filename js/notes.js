@@ -139,10 +139,12 @@ function addNote(note = null, type = null) {
     const addItemButton = document.createElement("button")
     noteContent.append(noteList, addItemInput, addItemButton)
     
-    noteList.innerHTML = note.content
-    const toUpdateOnchange = noteList.querySelectorAll("li > input")
-    for (let element of toUpdateOnchange) {
-      element.onchange = checkedChanged
+    if (note.content != "") {
+      console.log(note.content)
+      const list = JSON.parse(note.content)
+      if (list) {
+        list.forEach((li) => createListItem(li.content, li.id, li.checked))
+      }
     }
 
     addItemInput.name = "Add Checklist Item"
@@ -154,35 +156,54 @@ function addNote(note = null, type = null) {
     addItemButton.textContent = "+"
     addItemButton.onclick = function () {
       if (!addItemInput.value || addItemInput.value.length < 1) return
+      createListItem(addItemInput.value)
+      addItemInput.value = null
+      note.content = JSONList(noteList)
+      setSaveStatus(false)
+    }
 
+    function JSONList(ul) {
+      const arr = []
+      for (let li of ul.children) {
+        arr.push({
+          id: li.querySelector("input").id,
+          checked: li.querySelector("input").checked,
+          content: li.querySelector("label").innerText
+        })
+      }
+      return JSON.stringify(arr)
+    }
+
+    function createListItem(content, indexID = null, checked = false) {
       const listItem = document.createElement("li");
       const ckb = document.createElement("input")
       const desc = document.createElement("label")
-      listItem.append(ckb, desc);
+      const btnRemove = document.createElement("button")
+      listItem.append(ckb, desc, btnRemove);
 
-      const indexID = noteList.children.length
-
-      ckb.id = note.id + "-ckb-" + indexID
+      if (indexID) ckb.id = note.id + "-ckb-" + indexID
+      else ckb.id = note.id + "-ckb-" + Date.now()
       ckb.type = "checkbox"
-      ckb.onchange = checkedChanged
+      ckb.checked = checked
+      ckb.onchange = function () {
+        note.content = JSONList(noteList)
+        setSaveStatus(false)
+      }
 
       desc.setAttribute("for", ckb.id)
-      desc.textContent = addItemInput.value
-      addItemInput.value = null
+      desc.textContent = content
+
+      btnRemove.textContent = "X"
+      btnRemove.onclick = function () {
+        listItem.remove()
+        note.content = JSONList(noteList)
+        setSaveStatus(false)
+      }
 
       noteList.append(listItem)
-      note.content = noteList.innerHTML
-      setSaveStatus(false)
-    }
-
-    function checkedChanged (e) {
-      const element = e.target
-      if (element.checked) element.setAttribute("checked", "checked")
-      else element.removeAttribute("checked")
-      note.content = noteList.innerHTML
-      setSaveStatus(false)
     }
   }
+
   else if (note.type == Note.type.image) {
     const srcInput = document.createElement("input")
     const linkedImage = document.createElement("img")
@@ -199,6 +220,7 @@ function addNote(note = null, type = null) {
     srcInput.value = note.content
     linkedImage.src = srcInput.value
   }
+
   else {
     const noteText = document.createElement("textarea")
     noteContent.append(noteText)

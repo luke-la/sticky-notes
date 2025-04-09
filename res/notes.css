@@ -105,16 +105,23 @@
   padding: 0;
 }
 
-.note input[type="checkbox"] {
-  accent-color: black;
-  margin: 0.5rem 1rem;
+.note li {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  gap: 0.5rem;
+  margin: 0.5rem;
+  border-bottom: 1px dashed black;
 }
 
-.note input[type="checkbox"]:checked + label {
+.note li input[type="checkbox"] {
+  accent-color: black;
+}
+
+.note li input[type="checkbox"]:checked + label {
   text-decoration: line-through solid currentColor;
 }
 
-.note input[name="Add Checklist Item"] {
+.note li input[name="Add Checklist Item"] {
   width: 25ch
 }
 
