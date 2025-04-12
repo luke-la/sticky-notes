@@ -129,7 +129,8 @@ btnBoardsList.onclick = function () {
   for (let board of boards) {
     const item = document.createElement("li")
     const button = document.createElement("button")
-    button.textContent = board
+    if (board == boardName) button.textContent = "> " + board
+    else button.textContent = board
     button.onclick = function () {
       loadBoard(board);
       list.style.display = "none"
@@ -236,9 +237,13 @@ btnTrashModal.onclick = function () {
   const trashList = modal.querySelector("#trash-list")
   const message = modal.querySelector("#trash-message")
   
-  if (trash.length < 1) message.textContent = "You have no boards in your trash bin."
-  else if (trash.length == 1) message.textContent = "You have one board in your trash bin."
-  else message.textContent = "You have " + trash.length + " boards in your trash bin."
+  function updateTrashCount() {
+    if (trash.length < 1) message.textContent = "You have no boards in your trash bin."
+    else if (trash.length == 1) message.textContent = "You have one board in your trash bin."
+    else message.textContent = "You have " + trash.length + " boards in your trash bin."
+  }
+
+  updateTrashCount()
   
   trashList.innerHTML = null
   if (trash.length > 0) {
@@ -246,7 +251,25 @@ btnTrashModal.onclick = function () {
       const notesString = localStorage.getItem(t)
       const noteCount = (notesString != null) ? JSON.parse(notesString).length : 0
       const item = document.createElement("li")
-      item.textContent = t + " | Notes: " + noteCount
+      const textContent = t + " | Notes: " + noteCount
+      const restoreBtn = document.createElement("button")
+      restoreBtn.textContent = "Restore"
+      restoreBtn.onclick = function () {
+        const indexToRemove = trash.findIndex((b) => b === t)
+        boards.push(...trash.splice(indexToRemove, 1))
+        localStorage.setItem("boardList", JSON.stringify(boards))
+        localStorage.setItem("trashList", JSON.stringify(trash))
+        loadBoard(t)
+        item.remove()
+        updateTrashCount()
+      }
+      const deleteBtn = document.createElement("button")
+      deleteBtn.textContent = "Delete"
+      deleteBtn.onclick = function () {
+        deleteBoard(t, item)
+        updateTrashCount()
+      }
+      item.append(restoreBtn, textContent, deleteBtn)
       trashList.append(item)
     }
   }
@@ -334,8 +357,7 @@ btnTrash.onclick = function () {
     "' board to trash?")
   if (result) {
     const indexToRemove = boards.findIndex((b) => b == boardName)
-    trash.push(boards[indexToRemove])
-    boards.splice(indexToRemove, 1)
+    trash.push(...boards.splice(indexToRemove, 1))
     if (boards.length < 1) boards.push("Main Board")
     localStorage.setItem("boardList", JSON.stringify(boards))
     localStorage.setItem("trashList", JSON.stringify(trash))
@@ -375,18 +397,17 @@ document.getElementById("close-settings-modal").onclick = function() {
   document.getElementById('settings-modal').close()
 }
 
-function deleteBoard() {
+function deleteBoard(board, item) {
   const result = prompt("Are you sure you want to permenantly delete your '" +
-    boardName +
-    "' board?\nPlease enter the name of the board below to confirm deletion, or click cancel to escape.")
+    board +
+    "' board?\nPlease enter the name of the board to confirm deletion, or click cancel to escape.")
   if (result == null) return
-  else if (result == boardName) {
-    localStorage.removeItem(boardName)
-    const indexToRemove = boards.findIndex((b) => b == boardName)
-    boards.splice(indexToRemove, 1)
-    if (boards.length < 1) boards.push("Main Board")
-    localStorage.setItem("boardList", JSON.stringify(boards))
-    loadBoard(boards[0])
+  else if (result == board) {
+    localStorage.removeItem(board)
+    const indexToRemove = trash.findIndex((b) => b == board)
+    trash.splice(indexToRemove, 1)
+    localStorage.setItem("trashList", JSON.stringify(trash))
+    item.remove()
   }
   else alert("You did not enter the correct name. If you wish to delete your board, please try again.")
 }
