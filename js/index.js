@@ -1,5 +1,6 @@
 let boards, trash, notes, boardName
 let saved = true
+let savedString = ""
 let darkMode, noteTheme, showNoteOrder
 let snapToGrid, gridSize = 15
 
@@ -23,8 +24,8 @@ else {
 function loadBoard(board) {
   boardName = board
 
-  const notesString = localStorage.getItem(board)
-  notes = (notesString !== null) ? JSON.parse(notesString) : []
+  savedString = localStorage.getItem(board)
+  notes = (savedString !== null) ? JSON.parse(savedString) : []
  
   document.getElementById("board-name").value = board
 
@@ -36,7 +37,7 @@ function loadBoard(board) {
       addNote(note)
 
   localStorage.setItem("lastBoard", board)
-  setSaveStatus(notesString !== null)
+  setSaveStatus()
 }
 
 // dark mode
@@ -132,8 +133,10 @@ btnBoardsList.onclick = function () {
     if (board == boardName) button.textContent = "> " + board
     else button.textContent = board
     button.onclick = function () {
-      loadBoard(board);
-      list.style.display = "none"
+      if (checkProceed()) {
+        loadBoard(board);
+        list.style.display = "none"
+      }
     }
     item.append(button)
     list.insertBefore(item, list.lastElementChild)
@@ -152,12 +155,15 @@ document.addEventListener("click", function (event) {
 // add board button
 const btnAddBoard = document.getElementById("btn-add-board")
 btnAddBoard.onclick = function () {
-  createNewBoard("untitled board")
+  if (checkProceed()) createNewBoard("untitled board")
 }
 
 // import board button
 const btnImportBoard = document.getElementById("btn-import-board")
 btnImportBoard.onclick = function () {
+  const proceeed = checkProceed()
+  if (!proceeed) return
+  
   list.style.display = "none"
 
   const dialog = document.getElementById('open-file-modal')
@@ -198,6 +204,7 @@ btnImportBoard.onclick = function () {
         })
     }
     reader.readAsText(input.files[0])
+    input.value = null;
     dialog.close()
   }
 
@@ -221,7 +228,8 @@ function createNewBoard(baseName, addnotes = []) {
   localStorage.setItem("boardList", JSON.stringify(boards))
 
   notes = addnotes;
-  localStorage.setItem(newName, JSON.stringify(notes))
+  savedString = JSON.stringify(notes)
+  localStorage.setItem(newName, savedString)
 
   loadBoard(newName)
   list.style.display = "none"
@@ -258,7 +266,7 @@ btnTrashModal.onclick = function () {
         boards.push(...trash.splice(indexToRemove, 1))
         localStorage.setItem("boardList", JSON.stringify(boards))
         localStorage.setItem("trashList", JSON.stringify(trash))
-        loadBoard(t)
+        if (saved) loadBoard(t)
         item.remove()
         updateTrashCount()
       }
@@ -320,17 +328,21 @@ boardNameInput.onblur = function () {
 
 const btnSave = document.getElementById("btn-save")
 btnSave.onclick = function () {
-  localStorage.setItem(boardName, JSON.stringify(notes))
-  setSaveStatus(true)
+  savedString = JSON.stringify(notes)
+  localStorage.setItem(boardName, savedString)
+  setSaveStatus()
 }
 
 // helper function to set save status
-function setSaveStatus(newSaveStatus) {
-  if (saved === newSaveStatus) return;
-
-  saved = newSaveStatus
+function setSaveStatus() {
+  saved = savedString === JSON.stringify(notes)
   if (saved) document.getElementById("save-status").textContent = "saved"
   else document.getElementById("save-status").textContent = "unsaved"
+}
+
+function checkProceed() {
+  if (saved) return true
+  else return confirm("Changes to this board may not be saved.")
 }
 
 const btnDownload = document.getElementById("btn-download")
@@ -397,9 +409,9 @@ document.getElementById("close-settings-modal").onclick = function() {
 }
 
 function deleteBoard(board, item) {
-  const result = prompt("Are you sure you want to permenantly delete your '" +
+  const result = prompt("Are you sure you want to permenantly delete '" +
     board +
-    "' board?\nPlease enter the name of the board to confirm deletion, or click cancel to escape.")
+    "'?\nEnter the name of the board to confirm deletion.")
   if (result == null) return
   else if (result == board) {
     localStorage.removeItem(board)

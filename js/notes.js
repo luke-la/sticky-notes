@@ -24,7 +24,7 @@ function addNote(note = null, type = null) {
     note = new Note()
     note.type = type
     notes.push(note)
-    setSaveStatus(false)
+    setSaveStatus()
   }
 
   const template = document.getElementById("note-template")
@@ -83,7 +83,7 @@ function addNote(note = null, type = null) {
       document.onmouseup = null
       note.position.x = noteDiv.style.left.slice(0, -2)
       note.position.y = noteDiv.style.top.slice(0, -2)
-      setSaveStatus(false)
+      setSaveStatus()
     }
   }
   grip.ondblclick = function () {
@@ -97,7 +97,7 @@ function addNote(note = null, type = null) {
 
     // adjust dom
     document.getElementById("noteboard").append(noteDiv)
-    setSaveStatus(false)
+    setSaveStatus()
   }
 
   const noteTitle = noteDiv.querySelector("input")
@@ -106,7 +106,7 @@ function addNote(note = null, type = null) {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     if (notes[currentIndex].title != noteTitle.value) {
       notes[currentIndex].title = noteTitle.value;
-      setSaveStatus(false)
+      setSaveStatus()
     }
   }
   
@@ -123,7 +123,7 @@ function addNote(note = null, type = null) {
     else noteFavorite.textContent = "\u2606"
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes[currentIndex].fav = fav
-    setSaveStatus(false)
+    setSaveStatus()
   }
 
   const noteDiscard = noteDiv.querySelector("button[title='Discard']")
@@ -131,7 +131,7 @@ function addNote(note = null, type = null) {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes.splice(currentIndex, 1)
     document.getElementById("noteboard").removeChild(noteDiv)
-    setSaveStatus(false)
+    setSaveStatus()
   }
 
   const noteContent = noteDiv.querySelector(".note-content")
@@ -160,7 +160,7 @@ function addNote(note = null, type = null) {
       createListItem(addItemInput.value)
       addItemInput.value = null
       note.content = JSONList(noteList)
-      setSaveStatus(false)
+      setSaveStatus()
     }
 
     function JSONList(ul) {
@@ -188,7 +188,7 @@ function addNote(note = null, type = null) {
       ckb.checked = checked
       ckb.onchange = function () {
         note.content = JSONList(noteList)
-        setSaveStatus(false)
+        setSaveStatus()
       }
 
       desc.setAttribute("for", ckb.id)
@@ -198,7 +198,7 @@ function addNote(note = null, type = null) {
       btnRemove.onclick = function () {
         listItem.remove()
         note.content = JSONList(noteList)
-        setSaveStatus(false)
+        setSaveStatus()
       }
 
       noteList.append(listItem)
@@ -216,7 +216,7 @@ function addNote(note = null, type = null) {
     srcInput.onblur = function () {
       linkedImage.src = srcInput.value
       note.content = srcInput.value
-      setSaveStatus(false)
+      setSaveStatus()
     }
     srcInput.value = note.content
     linkedImage.src = srcInput.value
@@ -237,7 +237,7 @@ function addNote(note = null, type = null) {
     noteText.onblur = function () {
       if (note.content != noteText.value) {
         note.content = noteText.value
-        setSaveStatus(false)
+        setSaveStatus()
       }
     }
   }
