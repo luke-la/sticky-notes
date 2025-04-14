@@ -1,26 +1,27 @@
-:root {
-  --near-base: hsl(0, 0%, 95%);
-  --base: hsl(0, 0%, 87%);
-  --primary-text: hsl(210, 7%, 7%);
-  --secondary: hsl(210, 5%, 25%);
-}
+@media (prefers-color-scheme: light) {
+  :root {
+    --near-base: hsl(0, 0%, 95%);
+    --base: hsl(0, 0%, 87%);
+    --primary-text: hsl(210, 7%, 7%);
+    --secondary: hsl(210, 5%, 25%);
+  }
 
-.dark {
-  --near-base: hsl(210, 7%, 10%);
-  --base: hsl(210, 5%, 15%);
-  --primary-text: hsl(0, 0%, 90%);
-  --secondary: hsl(0, 0%, 75%);
-}
+  .dark {
+    --near-base: hsl(210, 7%, 10%);
+    --base: hsl(210, 5%, 15%);
+    --primary-text: hsl(0, 0%, 90%);
+    --secondary: hsl(0, 0%, 75%);
+  }
 
-#dark-mode-icon > :first-child,
-.dark #dark-mode-icon > :last-child {
-  display: none;
+  #dark-mode-icon > :first-child,
+  .dark #dark-mode-icon > :last-child {
+    display: none;
+  }
+  #dark-mode-icon > :last-child,
+  .dark #dark-mode-icon > :first-child {
+    display: inline-block;
+  }
 }
-#dark-mode-icon > :last-child,
-.dark #dark-mode-icon > :first-child {
-  display: inline-block;
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
     --near-base: hsl(210, 7%, 10%);
@@ -40,7 +41,6 @@
   .dark #dark-mode-icon > :last-child {
     display: inline-block;
   }
-
   #dark-mode-icon > :last-child,
   .dark #dark-mode-icon > :first-child {
     display: none;
@@ -72,12 +72,22 @@ dialog button {
   font-size: 1rem;
 }
 
-dialog form ol {
-  list-style: none;
-}
-
 dialog::backdrop {
   background-color: hsla(0, 0%, 0%, 50%);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+hr {
+  border: 1px solid var(--primary-text);
+}
+
+fieldset {
+  border: 1px solid var(--primary-text);
 }
 
 header {
@@ -109,20 +119,6 @@ button {
   cursor: pointer;
 }
 
-svg {
-  display: block;
-  margin: 0 auto;
-}
-
-svg .trash-icon-lid {
-  transition: 0.2s ease;
-  transform-origin: 50% 50%;
-}
-
-button#btn-trash:hover svg .trash-icon-lid {
-  transform: rotate(20deg);
-}
-
 button:hover:not(:disabled),
 button:focus-visible {
   border-color: var(--primary-text);
@@ -140,11 +136,11 @@ header > button {
   font-size: 1.5rem;
 }
 
-header > h2 {
+header > h1 {
   margin: 0;
 }
 
-header > h2 > input {
+header > h1 > input {
   width: 18ch;
   outline: none;
   border: 2px solid transparent;
@@ -154,7 +150,7 @@ header > h2 > input {
   font: inherit;
 }
 
-header > h2 > input:focus {
+header > h1 > input:focus {
   border-color: var(--primary-text);
 }
 
@@ -162,6 +158,26 @@ span#save-status {
   display: inline-block;
   width: max-content;
   font-size: 1rem;
+  cursor: default;
+}
+
+.hide-style {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+svg {
+  display: block;
+  margin: 0 auto;
+}
+
+svg .trash-icon-lid {
+  transition: 0.2s ease;
+  transform-origin: 50% 50%;
+}
+
+button#btn-trash:hover svg .trash-icon-lid {
+  transform: rotate(20deg);
 }
 
 #toolbar {
@@ -185,7 +201,6 @@ span#save-status {
   display: none;
   height: calc(100vh - 56px - 1rem);
   overflow: auto;
-  list-style: none;
   margin: 0;
   padding: 0 2rem 1rem;
   border-radius: 0 0 1rem 1rem;
@@ -205,4 +220,25 @@ span#save-status {
   display: inline-block;
   width: 1em;
   text-align: center;
+}
+
+#trash-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-block: 0.25rem;
+}
+
+#trash-list li button:hover:first-child, 
+#trash-list li button:focus-visible:first-child {
+  border-color: transparent;
+  text-decoration: solid underline var(--primary-text) 2px;
+}
+
+#trash-list li button:hover:last-child, 
+#trash-list li button:focus-visible:last-child {
+  border-color: red;
+  background-color: red;
+  color: white;
 }

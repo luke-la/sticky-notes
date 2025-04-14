@@ -166,7 +166,6 @@ btnImportBoard.onclick = function () {
   const btnCancel = document.getElementById("btn-file-cancel")
 
   input.onchange = function () {
-    console.log(input.files[0])
     btnAccept.disabled = (!input.files[0])
   }
 

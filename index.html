@@ -13,13 +13,13 @@
 </head>
 <body>
   <header>
-    <button id="btn-boards-list">
+    <button id="btn-boards-list" title="Board List">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3">
         <path d="M5,6 L19,6 M5,12 L19,12 M5,18 L19,18" />
       </svg>
     </button>
 
-    <ul id="boards-list">
+    <ul id="boards-list" class="hide-style">
       <li class="permanent-list-item">
         <span class="list-icon">+</span>
         <button id="btn-add-board">Add New Board</button>
@@ -44,10 +44,10 @@
       </li>
     </ul>
 
-    <h2>
+    <h1>
       <input id="board-name" autocomplete="off" value="Main Board" maxlength="18" />
       <span id="save-status">saved</span>
-    </h2>
+    </h1>
 
     <button id="btn-save" title="Save Board">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
@@ -91,20 +91,30 @@
 
   <main>
     <dialog id="open-file-modal">
+      <div class="dialog-header">
+        <h2>Add From File</h2>
+        <button id="btn-file-cancel">Close</button>
+      </div>
+      <hr />
       <input id="file-input" type="file" accept=".json,application/json" />
       <button id="btn-file-accept">Accept</button>
-      <button id="btn-file-cancel">Cancel</button>
     </dialog>
 
     <dialog id="trash-modal">
+      <div class="dialog-header">
+        <h2>Trash</h2>
+        <button id="close-trash-modal">Close</button>
+      </div>
+      <hr />
       <p id="trash-message"></p>
-      <ul id="trash-list"></ul>
-      <button id="close-trash-modal">Close</button>
+      <ul id="trash-list" class="hide-style"></ul>
     </dialog>
 
     <dialog id="info-modal">
-      <button id="close-info-modal">close</button>
-      <h2>How to Use Sticky Notes</h2>
+      <div class="dialog-header">
+        <h2>How to Use Sticky Notes</h2>
+        <button id="close-info-modal">close</button>
+      </div>
       <hr />
       <section>
         <h3>Creating Notes</h3>
@@ -138,11 +148,14 @@
     </dialog>
 
     <dialog id="settings-modal">
-      <h2>Settings</h2>
+      <div class="dialog-header">
+        <h2>Settings</h2>
+        <button id="close-settings-modal">Close</button>
+      </div>
       <form>
         <fieldset>
           <legend>Display:</legend>
-          <ol>
+          <ol class="hide-style">
             <li>
               <span id="dark-mode-icon">
                 <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -184,7 +197,7 @@
         </fieldset>   
         <fieldset>
           <legend>Theme:</legend>
-          <ol>
+          <ol class="hide-style">
             <li>
               <input type="radio" id="theme-classic" name="theme" />
               <label for="theme-classic">Classic</label>
@@ -213,7 +226,6 @@
         </fieldset>
       </form>
       <button id="btn-reset-settings">Reset to Defaults</button>
-      <button id="close-settings-modal">Close</button>
     </dialog>
     
     <template id="note-template">

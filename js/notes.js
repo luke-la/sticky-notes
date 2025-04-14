@@ -50,6 +50,8 @@ function addNote(note = null, type = null) {
       const differenceX = lastPos.x - e.clientX
       const differenceY = lastPos.y - e.clientY
 
+      const maxY = document.getElementsByTagName("header")[0].clientHeight
+
       if (snapToGrid) {
         if (Math.abs(differenceX) > gridSize) {
           lastPos.x = e.clientX
@@ -61,7 +63,7 @@ function addNote(note = null, type = null) {
           lastPos.y = e.clientY
 
           const newPosY = noteDiv.offsetTop - (noteDiv.offsetTop % gridSize) - (differenceY - differenceY % gridSize)
-          noteDiv.style.top = Math.max(newPosY, 0) + "px"
+          noteDiv.style.top = Math.max(newPosY, maxY) + "px"
         }
       }
       else {
@@ -72,7 +74,7 @@ function addNote(note = null, type = null) {
         noteDiv.style.left = Math.max(newPosX, 0) + "px"
 
         const newPosY = noteDiv.offsetTop - differenceY
-        noteDiv.style.top = Math.max(newPosY, 0) + "px"
+        noteDiv.style.top = Math.max(newPosY, maxY) + "px"
       }
     }
 
@@ -140,7 +142,6 @@ function addNote(note = null, type = null) {
     noteContent.append(noteList, addItemInput, addItemButton)
     
     if (note.content != "") {
-      console.log(note.content)
       const list = JSON.parse(note.content)
       if (list) {
         list.forEach((li) => createListItem(li.content, li.id, li.checked))

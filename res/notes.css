@@ -21,7 +21,7 @@
   color: black;
   box-shadow: 2px 2px 4px 2px #0005;
   border: 2px solid transparent;
-  max-width: 400px;
+  width: 385px;
 }
 
 .note.favorite {
@@ -121,13 +121,19 @@
   text-decoration: line-through solid currentColor;
 }
 
+.note li input[type="checkbox"]:hover,
+.note li input[type="checkbox"]:focus-visible {
+  outline: 2px solid black;
+  outline-offset: 2px
+}
+
 .note li input[name="Add Checklist Item"] {
   width: 25ch
 }
 
 .note img {
   display: block;
-  width: 100%;
+  max-width: 100%
 }
 
 .note input[name="Image Url Input"] {
