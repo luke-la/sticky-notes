@@ -27,7 +27,10 @@ function loadBoard(board) {
   savedString = localStorage.getItem(board)
   notes = (savedString !== null) ? JSON.parse(savedString) : []
  
-  document.getElementById("board-name").value = board
+  const nameInput = document.getElementById("board-name")
+  nameInput.value = board
+  nameInput.style.width = board.length + "ch"
+  
 
   const nb = document.getElementById("noteboard")
   while (nb.hasChildNodes()) nb.removeChild(nb.firstChild)
@@ -41,8 +44,7 @@ function loadBoard(board) {
 }
 
 // dark mode
-darkMode = localStorage.getItem("darkMode")
-if (darkMode === "active") toggleDarkMode()
+if (localStorage.getItem("darkMode") === "active") toggleDarkMode()
 const btnDarkMode = document.getElementById("btn-dark-mode")
 btnDarkMode.onclick = function (e) {
   e.preventDefault()
@@ -56,10 +58,9 @@ function toggleDarkMode() {
 }
 
 // note order
-showNoteOrder = localStorage.getItem("showNoteOrder")
 const ckbShowNoteOrder = document.getElementById("ckb-show-note-order")
 ckbShowNoteOrder.onchange = toggleShowNoteOrder
-if (showNoteOrder === "display") {
+if (localStorage.getItem("showNoteOrder") === "display") {
   toggleShowNoteOrder()
   ckbShowNoteOrder.checked = true
 }
@@ -71,12 +72,13 @@ function toggleShowNoteOrder()  {
 }
 
 // grid snapping 
-snapToGrid = localStorage.getItem("snapToGrid") === "true"
+snapToGrid = localStorage.getItem("snapToGrid") === "snap"
 const ckbGridSnap = document.getElementById("ckb-grid-snapping")
+ckbGridSnap.checked = snapToGrid
 ckbGridSnap.onchange = function () {
   snapToGrid = ckbGridSnap.checked
   inputSize.disabled = !ckbGridSnap.checked
-  localStorage.setItem("snapToGrid", String(ckbGridSnap.checked))
+  localStorage.setItem("snapToGrid", (ckbGridSnap.checked) ? "snap" : null)
 }
 
 const storedGridSize = parseInt(localStorage.getItem("gridSize"))
@@ -90,9 +92,8 @@ if (storedGridSize) {
   else if (gridSize > sizeMax) gridSize = sizeMax
 }
 
-inputSize.disabled = !ckbGridSnap.checked
+inputSize.disabled = !snapToGrid
 inputSize.value = gridSize
-inputSize.input
 inputSize.onchange = function () {
   if (isNaN(inputSize.value)) return
   if (inputSize.value > sizeMax) inputSize.value = sizeMax
@@ -297,9 +298,17 @@ boardNameInput.onblur = function () {
   // if no change was made, do nothing
   if (newName == oldName) return
 
+  // if board name is too short, revert
+  if (newName.length < 1) {
+    boardNameInput.value = oldName
+    boardNameInput.style.width = Math.max(oldName.length, 1) + "ch"
+    return
+  }
+
   // if there is already a board with that name, alert user and do nothing
   if (boards.some((b) => b == newName)) {
     boardNameInput.value = oldName
+    boardNameInput.style.width = Math.max(oldName.length, 1) + "ch"
     alert("You already have a board with that name.")
     return
   }
@@ -318,12 +327,15 @@ boardNameInput.onblur = function () {
   // rename board and move it's storage over to be held under the new name
   boardName = newName
 
-  const index = boards.findIndex((b) => b == oldName)
-  boards[index] = boardName
+  boards[boards.findIndex((b) => b == oldName)] = boardName
 
   localStorage.setItem("boardList", JSON.stringify(boards))
   localStorage.setItem(boardName, localStorage.getItem(oldName))
   localStorage.removeItem(oldName)
+  localStorage.setItem("lastBoard", boardName)
+}
+boardNameInput.oninput = function () {
+  boardNameInput.style.width = Math.max(boardNameInput.value.length, 1) + "ch"
 }
 
 const btnSave = document.getElementById("btn-save")
@@ -395,6 +407,25 @@ themesToggles.forEach(function (theme) {
 // reset settings
 const btnResetSettings = document.getElementById("btn-reset-settings")
 btnResetSettings.onclick = function () {
+  //reset dark mode to browser default
+  if (localStorage.getItem("darkMode") === "active") {
+    toggleDarkMode()
+  }
+  //reset display note order
+  if (localStorage.getItem("showNoteOrder") === "display") toggleShowNoteOrder()
+  ckbShowNoteOrder.checked = false
+
+  //reset grid snapping
+  snapToGrid = false
+  ckbGridSnap.checked = snapToGrid
+  localStorage.setItem("snapToGrid", String(ckbGridSnap.checked))
+  
+  gridSize = 15
+  inputSize.disabled = !ckbGridSnap.checked
+  inputSize.value = gridSize
+  localStorage.setItem("gridSize", 15)
+  
+  //reset theme
   updateTheme("theme-classic")
   themesToggles.forEach(function (theme) {
     if (theme.id == noteTheme) theme.checked = true

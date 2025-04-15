@@ -58,7 +58,7 @@
     <button id="btn-download" title="Download Board">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
         <path d="M2,14 L2,22 L22,22 L22,14" />
-        <path d="M8,12 L12,16 L16,12 M12,16 L12,2" />
+        <path class="download-icon-arrow" d="M8,12 L12,16 L16,12 M12,16 L12,2" />
       </svg>
     </button>
 
@@ -78,7 +78,7 @@
     <button id="btn-settings" title="Settings">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3" />
-        <path d="M 10,2 L 14,2 A 2.5 2.5 0 0 0 18,4 L 20,6 A 2.5 2.5 0 0 0 22,10 L22,14 A 2.5 2.5 0 0 0 20,18 L 18,20 A 2.5 2.5 0 0 0 14,22
+        <path class="settings-icon-wheel" d="M 10,2 L 14,2 A 2.5 2.5 0 0 0 18,4 L 20,6 A 2.5 2.5 0 0 0 22,10 L22,14 A 2.5 2.5 0 0 0 20,18 L 18,20 A 2.5 2.5 0 0 0 14,22
           L 10,22 A 2.5 2.5 0 0 0 6,20 L 4,18 A 2.5 2.5 0 0 0 2,14 L 2,10 A 2.5 2.5 0 0 0 4,6 L6,4 A 2.5 2.5 0 0 0 10,2 Z" />
       </svg>
     </button>
@@ -118,22 +118,41 @@
       <hr />
       <section>
         <h3>Creating Notes</h3>
-        <p>Clicking the add note button at the top of the screen will create a new note.</p>
-        <p>Click the note's fields to change the data.</p>
-        <p>Each note has a favorite button which will change it's background color to something more visible, and has a delete button which will remove it.</p>
-        <p>Notes can be repositioned by clicking and holding the colored bar at the top of the note and draging it to a new position</p>
+        <p>Clicking 'Add' buttons at the top of the screen will create Notes.</p>
+        <p>There are three types of notes currently supported:</p>
+        <dl>
+          <dt><b>Text</b></dt>
+          <dd>A plaintext note good for ideas, descriptions, and unformatted lists.</dd>
+          <br />
+          <dt><b>Checklist</b></dt>
+          <dd>Allows you to create a list of tasks, and check them off upon completition.</dd>
+          <br />
+          <dt><b>Image</b></dt>
+          <dd>Displays an image stored elsewhere on the internet via a given link.</dd>
+        </dl>
+        <p>You can click a note's fields to change its data with the exception of individual tasks within a checklist note.</p>
+        <p>Each note has a favorite button marked by a star (&#x2605;) which will change it's background color to something more visible and a delete button marked by an cross (&cross;) which will remove it from the noteboard.</p>
+        <p>Notes can be repositioned by clicking and dragging the colored bar at the top of the note and moving it to a new position. The board will automatically resize itself to contain all notes.</p>
+        <p>Make sure to click save when you're done making changes!</p>
+      </section>
+      <section>
+        <h3>Saving</h3>
+        <p>When you want to save your board, click the save icon, and the content of your board will be saved to your browser's local storage. It will not go anywhere besides the computer you are on, and you will not have access to it if you switch computers or browsers.</p>
+        <p>If you want to back up your boards so you can access them offline, on another machine, or between browsers, you can download them via the download icon.</p>
+        <p>Downloaded boards are JSON files, which means you can edit and access them using text editors.</p>
+        <p>Warning: Changing the format of your files too much may prevent you from reuploading them.</p>
       </section>
       <section>
         <h3>Board Options</h3>
+        <p>If you run out of space on your board, or want to seperate your notes by topic, you can create additional boards.</p>
+        <p>The hamburger menu at the top left of the screen allows you to create a new board, or upload one you have saved in our format.</p>
+        <p>Make sure your current board is saved before navigating away.</p>
+        <p>This menu will also allow you to navigate between your saved boards, and access your trash can for any you might delete.</p>
         <p>You can change the name of your current board by clicking it's tilte on the header bar.</p>
-        <p>You will also want to click the save button in order for your notes contents to be saved to local storage.</p>
-        <p>If you want to back up your boards, you can download them as JSON files.</p>
-        <p>The hamburger menu at the top left of the screen allows you to create new moad</p>
-        <p>Backing up data</p>
+        <p>Make sure that any name you enter is unique.</p>
       </section>
       <section>
         <h3>Additional Settings</h3>
-        <p>Some of the following features are not yet implemented</p>
         <dl>
           <dt>Dark Mode</dt>
           <dd>Clicking the top left button will toggle a dark background and light text, though the colors of the sticky notes will remain unchanged.</dd>

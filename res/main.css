@@ -1,3 +1,5 @@
+/* site color */
+
 @media (prefers-color-scheme: light) {
   :root {
     --near-base: hsl(0, 0%, 95%);
@@ -58,6 +60,8 @@ body {
   cursor: auto;
 }
 
+/* dialogs */
+
 dialog {
   max-width: 70ch;
   max-height: 80%;
@@ -97,7 +101,7 @@ header {
   right: 0;
   z-index: 200;
   display: grid;
-  grid-template-columns: repeat(3, max-content) 1fr repeat(3, max-content);
+  grid-template-columns: max-content 1fr repeat(5, max-content);
   gap: 1rem;
   align-items: center;
   padding: 0.5rem;
@@ -138,10 +142,10 @@ header > button {
 
 header > h1 {
   margin: 0;
+  position: relative;
 }
 
 header > h1 > input {
-  width: 18ch;
   outline: none;
   border: 2px solid transparent;
   border-radius: 0.5rem;
@@ -166,18 +170,44 @@ span#save-status {
   padding-inline-start: 0;
 }
 
+dl {
+  padding-inline: 2.5rem;
+}
+
+/* icon animations */
+
 svg {
   display: block;
   margin: 0 auto;
 }
 
-svg .trash-icon-lid {
-  transition: 0.2s ease;
-  transform-origin: 50% 50%;
-}
+@media (prefers-reduced-motion: no-preference) {
+  svg .trash-icon-lid {
+    transition: rotate 0.2s ease;
+    transform-origin: 50% 50%;
+  }
 
-button#btn-trash:hover svg .trash-icon-lid {
-  transform: rotate(20deg);
+  button#btn-trash:hover svg .trash-icon-lid {
+    rotate: 20deg;
+  }
+
+  svg .settings-icon-wheel {
+    transition: rotate 0.5s ease;
+    transform-origin: 50% 50%;
+  }
+
+  button#btn-settings:hover svg .settings-icon-wheel {
+    rotate: 90deg;
+  }
+
+  svg .download-icon-arrow {
+    transition: translate 0.2s ease;
+    translate: 0 -5%;
+  }
+
+  button#btn-download:hover svg .download-icon-arrow {
+    translate: 0 10%;
+  }
 }
 
 #toolbar {
@@ -199,11 +229,10 @@ button#btn-trash:hover svg .trash-icon-lid {
   left: 0;
   z-index: 250;
   display: none;
-  height: calc(100vh - 56px - 1rem);
+  height: calc(100vh - 56px);
   overflow: auto;
   margin: 0;
-  padding: 0 2rem 1rem;
-  border-radius: 0 0 1rem 1rem;
+  padding: 0 2rem;
 }
 
 #boards-list li {
@@ -228,12 +257,6 @@ button#btn-trash:hover svg .trash-icon-lid {
   justify-content: space-between;
   gap: 2rem;
   padding-block: 0.25rem;
-}
-
-#trash-list li button:hover:first-child, 
-#trash-list li button:focus-visible:first-child {
-  border-color: transparent;
-  text-decoration: solid underline var(--primary-text) 2px;
 }
 
 #trash-list li button:hover:last-child, 
