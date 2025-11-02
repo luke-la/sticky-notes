@@ -55,8 +55,16 @@ body {
   font: 1rem monospace;
 }
 
+a {
+  color: var(--primary-text);
+}
+
+a:visited {
+  color: var(--secondary);
+}
+
 :disabled {
-  color: gray;
+  color: var(--secondary);
   cursor: auto;
 }
 
@@ -195,14 +203,12 @@ summary > h3 {
 
 .warning {
   display: block;
-  padding: 0.5rem 2rem;
-  margin: 1rem;
+  padding: 0.25rem;
+  margin: 1rem 1.5rem;
 
-  
+  border-left: 10px double var(--primary-text);
   font-weight: bold;
   text-align: center;
-  border: 2px solid var(--primary-text);
-  border-radius: 1rem;
 }
 
 
