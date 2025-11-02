@@ -1,46 +1,48 @@
-:root {
-  --near-base: hsl(0, 0%, 95%);
-  --base: hsl(0, 0%, 87%);
-  --primary-text: hsl(210, 7%, 7%);
-  --secondary: hsl(210, 5%, 25%);
-}
+/* site color */
 
-.dark {
-  --near-base: hsl(210, 7%, 10%);
-  --base: hsl(210, 5%, 15%);
-  --primary-text: hsl(0, 0%, 90%);
-  --secondary: hsl(0, 0%, 75%);
-}
+@media (prefers-color-scheme: light) {
+  :root {
+    --base: hsl(0, 0%, 95%);
+    --near-base: hsl(0, 0%, 87%);
+    --primary-text: hsl(210, 7%, 7%);
+    --secondary: hsl(210, 5%, 25%);
+  }
 
-#dark-mode-icon > :first-child,
-.dark #dark-mode-icon > :last-child {
-  display: none;
-}
-#dark-mode-icon > :last-child,
-.dark #dark-mode-icon > :first-child {
-  display: inline-block;
-}
+  .dark {
+    --base: hsl(210, 7%, 10%);
+    --near-base: hsl(210, 5%, 15%);
+    --primary-text: hsl(0, 0%, 90%);
+    --secondary: hsl(0, 0%, 75%);
+  }
 
+  #dark-mode-icon > :first-child,
+  .dark #dark-mode-icon > :last-child {
+    display: none;
+  }
+  #dark-mode-icon > :last-child,
+  .dark #dark-mode-icon > :first-child {
+    display: inline-block;
+  }
+}
 @media (prefers-color-scheme: dark) {
   :root {
-    --near-base: hsl(210, 7%, 10%);
-    --base: hsl(210, 5%, 15%);
+    --base: hsl(210, 7%, 10%);
+    --near-base: hsl(210, 5%, 15%);
     --primary-text: hsl(0, 0%, 90%);
     --secondary: hsl(0, 0%, 75%);
   }
 
   .dark {
-    --near-base: hsl(0, 0%, 95%);
-    --base: hsl(0, 0%, 87%);
+    --base: hsl(0, 0%, 95%);
+    --near-base: hsl(0, 0%, 87%);
     --primary-text: hsl(210, 7%, 7%);
-    --secondary: hsl(210, 5%, 30%);
+    --secondary: hsl(210, 5%, 25%);
   }
 
   #dark-mode-icon > :first-child,
   .dark #dark-mode-icon > :last-child {
     display: inline-block;
   }
-
   #dark-mode-icon > :last-child,
   .dark #dark-mode-icon > :first-child {
     display: none;
@@ -48,22 +50,33 @@
 }
 
 body {
-  background-color: var(--near-base);
+  background-color: var(--base);
   color: var(--primary-text);
   font: 1rem monospace;
 }
 
+a {
+  color: var(--primary-text);
+}
+
+a:visited {
+  color: var(--secondary);
+}
+
 :disabled {
-  color: gray;
+  color: var(--secondary);
   cursor: auto;
 }
 
+/* dialogs */
+
 dialog {
   max-width: 70ch;
+  min-width: 35ch;
   max-height: 80%;
   padding: 2rem;
   border: none;
-  background-color: var(--base);
+  background-color: var(--near-base);
   color: var(--primary-text);
   font-size: 1rem;
 }
@@ -72,12 +85,23 @@ dialog button {
   font-size: 1rem;
 }
 
-dialog form ol {
-  list-style: none;
-}
-
 dialog::backdrop {
   background-color: hsla(0, 0%, 0%, 50%);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+hr {
+  border: 1px solid var(--primary-text);
+}
+
+fieldset {
+  border: 1px solid var(--primary-text);
+  background-color: var(--base);
 }
 
 header {
@@ -87,11 +111,11 @@ header {
   right: 0;
   z-index: 200;
   display: grid;
-  grid-template-columns: repeat(3, max-content) 1fr repeat(3, max-content);
+  grid-template-columns: max-content 1fr repeat(5, max-content);
   gap: 1rem;
   align-items: center;
   padding: 0.5rem;
-  background-color: var(--base);
+  background-color: var(--near-base);
 }
 
 button {
@@ -101,26 +125,12 @@ button {
   align-items: center;
 
   border-radius: 1rem;
-  background-color: var(--base);
+  background-color: var(--near-base);
   color: var(--primary-text);
   font-weight: bold;
   font-family: inherit;
 
   cursor: pointer;
-}
-
-svg {
-  display: block;
-  margin: 0 auto;
-}
-
-svg .trash-icon-lid {
-  transition: 0.2s ease;
-  transform-origin: 50% 50%;
-}
-
-button#btn-trash:hover svg .trash-icon-lid {
-  transform: rotate(20deg);
 }
 
 button:hover:not(:disabled),
@@ -140,12 +150,12 @@ header > button {
   font-size: 1.5rem;
 }
 
-header > h2 {
+header > h1 {
   margin: 0;
+  position: relative;
 }
 
-header > h2 > input {
-  width: 18ch;
+header > h1 > input {
   outline: none;
   border: 2px solid transparent;
   border-radius: 0.5rem;
@@ -154,7 +164,7 @@ header > h2 > input {
   font: inherit;
 }
 
-header > h2 > input:focus {
+header > h1 > input:focus {
   border-color: var(--primary-text);
 }
 
@@ -162,6 +172,80 @@ span#save-status {
   display: inline-block;
   width: max-content;
   font-size: 1rem;
+  cursor: default;
+}
+
+.hide-style {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+dl {
+  padding-inline: 2.5rem;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-bottom: 1rem;
+}
+
+summary {
+  margin-block: 1rem;
+}
+
+summary > h3 {
+  display: inline;
+  padding-left: 1rem;
+}
+
+.warning {
+  display: block;
+  padding: 0.25rem;
+  margin: 1rem 1.5rem;
+
+  border-left: 10px double var(--primary-text);
+  font-weight: bold;
+  text-align: center;
+}
+
+
+/* icon animations */
+
+svg {
+  display: block;
+  margin: 0 auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  svg .trash-icon-lid {
+    transition: rotate 0.2s ease;
+    transform-origin: 50% 50%;
+  }
+
+  button#btn-trash:hover svg .trash-icon-lid {
+    rotate: 20deg;
+  }
+
+  svg .settings-icon-wheel {
+    transition: rotate 0.5s ease;
+    transform-origin: 50% 50%;
+  }
+
+  button#btn-settings:hover svg .settings-icon-wheel {
+    rotate: 90deg;
+  }
+
+  svg .download-icon-arrow {
+    transition: translate 0.2s ease;
+    translate: 0 -5%;
+  }
+
+  button#btn-download:hover svg .download-icon-arrow {
+    translate: 0 10%;
+  }
 }
 
 #toolbar {
@@ -178,17 +262,15 @@ span#save-status {
 
 #boards-list {
   position: fixed;
-  background-color: var(--base);
+  background-color: var(--near-base);
   top: 56px;
   left: 0;
   z-index: 250;
   display: none;
-  height: calc(100vh - 56px - 1rem);
+  height: calc(100vh - 56px);
   overflow: auto;
-  list-style: none;
   margin: 0;
-  padding: 0 2rem 1rem;
-  border-radius: 0 0 1rem 1rem;
+  padding: 0 2rem;
 }
 
 #boards-list li {
@@ -205,4 +287,19 @@ span#save-status {
   display: inline-block;
   width: 1em;
   text-align: center;
+}
+
+#trash-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-block: 0.25rem;
+}
+
+#trash-list li button:hover:last-child, 
+#trash-list li button:focus-visible:last-child {
+  border-color: red;
+  background-color: red;
+  color: white;
 }

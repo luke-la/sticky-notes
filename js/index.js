@@ -1,5 +1,6 @@
 let boards, trash, notes, boardName
 let saved = true
+let savedString = ""
 let darkMode, noteTheme, showNoteOrder
 let snapToGrid, gridSize = 15
 
@@ -23,10 +24,13 @@ else {
 function loadBoard(board) {
   boardName = board
 
-  const notesString = localStorage.getItem(board)
-  notes = (notesString !== null) ? JSON.parse(notesString) : []
+  savedString = localStorage.getItem(board)
+  notes = (savedString !== null) ? JSON.parse(savedString) : []
  
-  document.getElementById("board-name").value = board
+  const nameInput = document.getElementById("board-name")
+  nameInput.value = board
+  nameInput.style.width = board.length + "ch"
+  
 
   const nb = document.getElementById("noteboard")
   while (nb.hasChildNodes()) nb.removeChild(nb.firstChild)
@@ -36,12 +40,11 @@ function loadBoard(board) {
       addNote(note)
 
   localStorage.setItem("lastBoard", board)
-  setSaveStatus(notesString !== null)
+  setSaveStatus()
 }
 
 // dark mode
-darkMode = localStorage.getItem("darkMode")
-if (darkMode === "active") toggleDarkMode()
+if (localStorage.getItem("darkMode") === "active") toggleDarkMode()
 const btnDarkMode = document.getElementById("btn-dark-mode")
 btnDarkMode.onclick = function (e) {
   e.preventDefault()
@@ -55,10 +58,9 @@ function toggleDarkMode() {
 }
 
 // note order
-showNoteOrder = localStorage.getItem("showNoteOrder")
 const ckbShowNoteOrder = document.getElementById("ckb-show-note-order")
 ckbShowNoteOrder.onchange = toggleShowNoteOrder
-if (showNoteOrder === "display") {
+if (localStorage.getItem("showNoteOrder") === "display") {
   toggleShowNoteOrder()
   ckbShowNoteOrder.checked = true
 }
@@ -70,12 +72,13 @@ function toggleShowNoteOrder()  {
 }
 
 // grid snapping 
-snapToGrid = localStorage.getItem("snapToGrid") === "true"
+snapToGrid = localStorage.getItem("snapToGrid") === "snap"
 const ckbGridSnap = document.getElementById("ckb-grid-snapping")
+ckbGridSnap.checked = snapToGrid
 ckbGridSnap.onchange = function () {
   snapToGrid = ckbGridSnap.checked
   inputSize.disabled = !ckbGridSnap.checked
-  localStorage.setItem("snapToGrid", String(ckbGridSnap.checked))
+  localStorage.setItem("snapToGrid", (ckbGridSnap.checked) ? "snap" : null)
 }
 
 const storedGridSize = parseInt(localStorage.getItem("gridSize"))
@@ -89,9 +92,8 @@ if (storedGridSize) {
   else if (gridSize > sizeMax) gridSize = sizeMax
 }
 
-inputSize.disabled = !ckbGridSnap.checked
+inputSize.disabled = !snapToGrid
 inputSize.value = gridSize
-inputSize.input
 inputSize.onchange = function () {
   if (isNaN(inputSize.value)) return
   if (inputSize.value > sizeMax) inputSize.value = sizeMax
@@ -129,10 +131,13 @@ btnBoardsList.onclick = function () {
   for (let board of boards) {
     const item = document.createElement("li")
     const button = document.createElement("button")
-    button.textContent = board
+    if (board == boardName) button.textContent = "> " + board
+    else button.textContent = board
     button.onclick = function () {
-      loadBoard(board);
-      list.style.display = "none"
+      if (checkProceed()) {
+        loadBoard(board);
+        list.style.display = "none"
+      }
     }
     item.append(button)
     list.insertBefore(item, list.lastElementChild)
@@ -151,12 +156,15 @@ document.addEventListener("click", function (event) {
 // add board button
 const btnAddBoard = document.getElementById("btn-add-board")
 btnAddBoard.onclick = function () {
-  createNewBoard("untitled board")
+  if (checkProceed()) createNewBoard("untitled board")
 }
 
 // import board button
 const btnImportBoard = document.getElementById("btn-import-board")
 btnImportBoard.onclick = function () {
+  const proceeed = checkProceed()
+  if (!proceeed) return
+  
   list.style.display = "none"
 
   const dialog = document.getElementById('open-file-modal')
@@ -165,7 +173,6 @@ btnImportBoard.onclick = function () {
   const btnCancel = document.getElementById("btn-file-cancel")
 
   input.onchange = function () {
-    console.log(input.files[0])
     btnAccept.disabled = (!input.files[0])
   }
 
@@ -198,6 +205,7 @@ btnImportBoard.onclick = function () {
         })
     }
     reader.readAsText(input.files[0])
+    input.value = null;
     dialog.close()
   }
 
@@ -221,7 +229,8 @@ function createNewBoard(baseName, addnotes = []) {
   localStorage.setItem("boardList", JSON.stringify(boards))
 
   notes = addnotes;
-  localStorage.setItem(newName, JSON.stringify(notes))
+  savedString = JSON.stringify(notes)
+  localStorage.setItem(newName, savedString)
 
   loadBoard(newName)
   list.style.display = "none"
@@ -236,9 +245,13 @@ btnTrashModal.onclick = function () {
   const trashList = modal.querySelector("#trash-list")
   const message = modal.querySelector("#trash-message")
   
-  if (trash.length < 1) message.textContent = "You have no boards in your trash bin."
-  else if (trash.length == 1) message.textContent = "You have one board in your trash bin."
-  else message.textContent = "You have " + trash.length + " boards in your trash bin."
+  function updateTrashCount() {
+    if (trash.length < 1) message.textContent = "You have no boards in your trash bin."
+    else if (trash.length == 1) message.textContent = "You have one board in your trash bin."
+    else message.textContent = "You have " + trash.length + " boards in your trash bin."
+  }
+
+  updateTrashCount()
   
   trashList.innerHTML = null
   if (trash.length > 0) {
@@ -246,7 +259,25 @@ btnTrashModal.onclick = function () {
       const notesString = localStorage.getItem(t)
       const noteCount = (notesString != null) ? JSON.parse(notesString).length : 0
       const item = document.createElement("li")
-      item.textContent = t + " | Notes: " + noteCount
+      const textContent = t + " | Notes: " + noteCount
+      const restoreBtn = document.createElement("button")
+      restoreBtn.textContent = "Restore"
+      restoreBtn.onclick = function () {
+        const indexToRemove = trash.findIndex((b) => b === t)
+        boards.push(...trash.splice(indexToRemove, 1))
+        localStorage.setItem("boardList", JSON.stringify(boards))
+        localStorage.setItem("trashList", JSON.stringify(trash))
+        if (saved) loadBoard(t)
+        item.remove()
+        updateTrashCount()
+      }
+      const deleteBtn = document.createElement("button")
+      deleteBtn.textContent = "Delete"
+      deleteBtn.onclick = function () {
+        deleteBoard(t, item)
+        updateTrashCount()
+      }
+      item.append(restoreBtn, textContent, deleteBtn)
       trashList.append(item)
     }
   }
@@ -267,9 +298,17 @@ boardNameInput.onblur = function () {
   // if no change was made, do nothing
   if (newName == oldName) return
 
+  // if board name is too short, revert
+  if (newName.length < 1) {
+    boardNameInput.value = oldName
+    boardNameInput.style.width = Math.max(oldName.length, 1) + "ch"
+    return
+  }
+
   // if there is already a board with that name, alert user and do nothing
   if (boards.some((b) => b == newName)) {
     boardNameInput.value = oldName
+    boardNameInput.style.width = Math.max(oldName.length, 1) + "ch"
     alert("You already have a board with that name.")
     return
   }
@@ -288,27 +327,34 @@ boardNameInput.onblur = function () {
   // rename board and move it's storage over to be held under the new name
   boardName = newName
 
-  const index = boards.findIndex((b) => b == oldName)
-  boards[index] = boardName
+  boards[boards.findIndex((b) => b == oldName)] = boardName
 
   localStorage.setItem("boardList", JSON.stringify(boards))
   localStorage.setItem(boardName, localStorage.getItem(oldName))
   localStorage.removeItem(oldName)
+  localStorage.setItem("lastBoard", boardName)
+}
+boardNameInput.oninput = function () {
+  boardNameInput.style.width = Math.max(boardNameInput.value.length, 1) + "ch"
 }
 
 const btnSave = document.getElementById("btn-save")
 btnSave.onclick = function () {
-  localStorage.setItem(boardName, JSON.stringify(notes))
-  setSaveStatus(true)
+  savedString = JSON.stringify(notes)
+  localStorage.setItem(boardName, savedString)
+  setSaveStatus()
 }
 
 // helper function to set save status
-function setSaveStatus(newSaveStatus) {
-  if (saved === newSaveStatus) return;
-
-  saved = newSaveStatus
+function setSaveStatus() {
+  saved = savedString === JSON.stringify(notes)
   if (saved) document.getElementById("save-status").textContent = "saved"
   else document.getElementById("save-status").textContent = "unsaved"
+}
+
+function checkProceed() {
+  if (saved) return true
+  else return confirm("Changes to this board may not be saved.")
 }
 
 const btnDownload = document.getElementById("btn-download")
@@ -334,8 +380,7 @@ btnTrash.onclick = function () {
     "' board to trash?")
   if (result) {
     const indexToRemove = boards.findIndex((b) => b == boardName)
-    trash.push(boards[indexToRemove])
-    boards.splice(indexToRemove, 1)
+    trash.push(...boards.splice(indexToRemove, 1))
     if (boards.length < 1) boards.push("Main Board")
     localStorage.setItem("boardList", JSON.stringify(boards))
     localStorage.setItem("trashList", JSON.stringify(trash))
@@ -362,6 +407,25 @@ themesToggles.forEach(function (theme) {
 // reset settings
 const btnResetSettings = document.getElementById("btn-reset-settings")
 btnResetSettings.onclick = function () {
+  //reset dark mode to browser default
+  if (localStorage.getItem("darkMode") === "active") {
+    toggleDarkMode()
+  }
+  //reset display note order
+  if (localStorage.getItem("showNoteOrder") === "display") toggleShowNoteOrder()
+  ckbShowNoteOrder.checked = false
+
+  //reset grid snapping
+  snapToGrid = false
+  ckbGridSnap.checked = snapToGrid
+  localStorage.setItem("snapToGrid", String(ckbGridSnap.checked))
+  
+  gridSize = 15
+  inputSize.disabled = !ckbGridSnap.checked
+  inputSize.value = gridSize
+  localStorage.setItem("gridSize", 15)
+  
+  //reset theme
   updateTheme("theme-classic")
   themesToggles.forEach(function (theme) {
     if (theme.id == noteTheme) theme.checked = true
@@ -375,18 +439,17 @@ document.getElementById("close-settings-modal").onclick = function() {
   document.getElementById('settings-modal').close()
 }
 
-function deleteBoard() {
-  const result = prompt("Are you sure you want to permenantly delete your '" +
-    boardName +
-    "' board?\nPlease enter the name of the board below to confirm deletion, or click cancel to escape.")
+function deleteBoard(board, item) {
+  const result = prompt("Are you sure you want to permenantly delete '" +
+    board +
+    "'?\nEnter the name of the board to confirm deletion.")
   if (result == null) return
-  else if (result == boardName) {
-    localStorage.removeItem(boardName)
-    const indexToRemove = boards.findIndex((b) => b == boardName)
-    boards.splice(indexToRemove, 1)
-    if (boards.length < 1) boards.push("Main Board")
-    localStorage.setItem("boardList", JSON.stringify(boards))
-    loadBoard(boards[0])
+  else if (result == board) {
+    localStorage.removeItem(board)
+    const indexToRemove = trash.findIndex((b) => b == board)
+    trash.splice(indexToRemove, 1)
+    localStorage.setItem("trashList", JSON.stringify(trash))
+    item.remove()
   }
   else alert("You did not enter the correct name. If you wish to delete your board, please try again.")
 }

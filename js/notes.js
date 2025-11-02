@@ -24,7 +24,7 @@ function addNote(note = null, type = null) {
     note = new Note()
     note.type = type
     notes.push(note)
-    setSaveStatus(false)
+    setSaveStatus()
   }
 
   const template = document.getElementById("note-template")
@@ -50,6 +50,8 @@ function addNote(note = null, type = null) {
       const differenceX = lastPos.x - e.clientX
       const differenceY = lastPos.y - e.clientY
 
+      const maxY = document.getElementsByTagName("header")[0].clientHeight
+
       if (snapToGrid) {
         if (Math.abs(differenceX) > gridSize) {
           lastPos.x = e.clientX
@@ -61,7 +63,7 @@ function addNote(note = null, type = null) {
           lastPos.y = e.clientY
 
           const newPosY = noteDiv.offsetTop - (noteDiv.offsetTop % gridSize) - (differenceY - differenceY % gridSize)
-          noteDiv.style.top = Math.max(newPosY, 0) + "px"
+          noteDiv.style.top = Math.max(newPosY, maxY) + "px"
         }
       }
       else {
@@ -72,7 +74,7 @@ function addNote(note = null, type = null) {
         noteDiv.style.left = Math.max(newPosX, 0) + "px"
 
         const newPosY = noteDiv.offsetTop - differenceY
-        noteDiv.style.top = Math.max(newPosY, 0) + "px"
+        noteDiv.style.top = Math.max(newPosY, maxY) + "px"
       }
     }
 
@@ -81,7 +83,7 @@ function addNote(note = null, type = null) {
       document.onmouseup = null
       note.position.x = noteDiv.style.left.slice(0, -2)
       note.position.y = noteDiv.style.top.slice(0, -2)
-      setSaveStatus(false)
+      setSaveStatus()
     }
   }
   grip.ondblclick = function () {
@@ -95,7 +97,7 @@ function addNote(note = null, type = null) {
 
     // adjust dom
     document.getElementById("noteboard").append(noteDiv)
-    setSaveStatus(false)
+    setSaveStatus()
   }
 
   const noteTitle = noteDiv.querySelector("input")
@@ -104,7 +106,7 @@ function addNote(note = null, type = null) {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     if (notes[currentIndex].title != noteTitle.value) {
       notes[currentIndex].title = noteTitle.value;
-      setSaveStatus(false)
+      setSaveStatus()
     }
   }
   
@@ -121,7 +123,7 @@ function addNote(note = null, type = null) {
     else noteFavorite.textContent = "\u2606"
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes[currentIndex].fav = fav
-    setSaveStatus(false)
+    setSaveStatus()
   }
 
   const noteDiscard = noteDiv.querySelector("button[title='Discard']")
@@ -129,7 +131,7 @@ function addNote(note = null, type = null) {
     const currentIndex = notes.findIndex((n) => n.id == note.id)
     notes.splice(currentIndex, 1)
     document.getElementById("noteboard").removeChild(noteDiv)
-    setSaveStatus(false)
+    setSaveStatus()
   }
 
   const noteContent = noteDiv.querySelector(".note-content")
@@ -139,10 +141,11 @@ function addNote(note = null, type = null) {
     const addItemButton = document.createElement("button")
     noteContent.append(noteList, addItemInput, addItemButton)
     
-    noteList.innerHTML = note.content
-    const toUpdateOnchange = noteList.querySelectorAll("li > input")
-    for (let element of toUpdateOnchange) {
-      element.onchange = checkedChanged
+    if (note.content != "") {
+      const list = JSON.parse(note.content)
+      if (list) {
+        list.forEach((li) => createListItem(li.content, li.id, li.checked))
+      }
     }
 
     addItemInput.name = "Add Checklist Item"
@@ -154,35 +157,54 @@ function addNote(note = null, type = null) {
     addItemButton.textContent = "+"
     addItemButton.onclick = function () {
       if (!addItemInput.value || addItemInput.value.length < 1) return
+      createListItem(addItemInput.value)
+      addItemInput.value = null
+      note.content = JSONList(noteList)
+      setSaveStatus()
+    }
 
+    function JSONList(ul) {
+      const arr = []
+      for (let li of ul.children) {
+        arr.push({
+          id: li.querySelector("input").id,
+          checked: li.querySelector("input").checked,
+          content: li.querySelector("label").innerText
+        })
+      }
+      return JSON.stringify(arr)
+    }
+
+    function createListItem(content, indexID = null, checked = false) {
       const listItem = document.createElement("li");
       const ckb = document.createElement("input")
       const desc = document.createElement("label")
-      listItem.append(ckb, desc);
+      const btnRemove = document.createElement("button")
+      listItem.append(ckb, desc, btnRemove);
 
-      const indexID = noteList.children.length
-
-      ckb.id = note.id + "-ckb-" + indexID
+      if (indexID) ckb.id = note.id + "-ckb-" + indexID
+      else ckb.id = note.id + "-ckb-" + Date.now()
       ckb.type = "checkbox"
-      ckb.onchange = checkedChanged
+      ckb.checked = checked
+      ckb.onchange = function () {
+        note.content = JSONList(noteList)
+        setSaveStatus()
+      }
 
       desc.setAttribute("for", ckb.id)
-      desc.textContent = addItemInput.value
-      addItemInput.value = null
+      desc.textContent = content
+
+      btnRemove.textContent = "X"
+      btnRemove.onclick = function () {
+        listItem.remove()
+        note.content = JSONList(noteList)
+        setSaveStatus()
+      }
 
       noteList.append(listItem)
-      note.content = noteList.innerHTML
-      setSaveStatus(false)
-    }
-
-    function checkedChanged (e) {
-      const element = e.target
-      if (element.checked) element.setAttribute("checked", "checked")
-      else element.removeAttribute("checked")
-      note.content = noteList.innerHTML
-      setSaveStatus(false)
     }
   }
+
   else if (note.type == Note.type.image) {
     const srcInput = document.createElement("input")
     const linkedImage = document.createElement("img")
@@ -194,11 +216,12 @@ function addNote(note = null, type = null) {
     srcInput.onblur = function () {
       linkedImage.src = srcInput.value
       note.content = srcInput.value
-      setSaveStatus(false)
+      setSaveStatus()
     }
     srcInput.value = note.content
     linkedImage.src = srcInput.value
   }
+
   else {
     const noteText = document.createElement("textarea")
     noteContent.append(noteText)
@@ -214,7 +237,7 @@ function addNote(note = null, type = null) {
     noteText.onblur = function () {
       if (note.content != noteText.value) {
         note.content = noteText.value
-        setSaveStatus(false)
+        setSaveStatus()
       }
     }
   }

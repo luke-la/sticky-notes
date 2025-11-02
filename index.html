@@ -13,13 +13,13 @@
 </head>
 <body>
   <header>
-    <button id="btn-boards-list">
+    <button id="btn-boards-list" title="Board List">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3">
         <path d="M5,6 L19,6 M5,12 L19,12 M5,18 L19,18" />
       </svg>
     </button>
 
-    <ul id="boards-list">
+    <ul id="boards-list" class="hide-style">
       <li class="permanent-list-item">
         <span class="list-icon">+</span>
         <button id="btn-add-board">Add New Board</button>
@@ -44,10 +44,10 @@
       </li>
     </ul>
 
-    <h2>
+    <h1>
       <input id="board-name" autocomplete="off" value="Main Board" maxlength="18" />
       <span id="save-status">saved</span>
-    </h2>
+    </h1>
 
     <button id="btn-save" title="Save Board">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
@@ -58,7 +58,7 @@
     <button id="btn-download" title="Download Board">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
         <path d="M2,14 L2,22 L22,22 L22,14" />
-        <path d="M8,12 L12,16 L16,12 M12,16 L12,2" />
+        <path class="download-icon-arrow" d="M8,12 L12,16 L16,12 M12,16 L12,2" />
       </svg>
     </button>
 
@@ -78,7 +78,7 @@
     <button id="btn-settings" title="Settings">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3" />
-        <path d="M 10,2 L 14,2 A 2.5 2.5 0 0 0 18,4 L 20,6 A 2.5 2.5 0 0 0 22,10 L22,14 A 2.5 2.5 0 0 0 20,18 L 18,20 A 2.5 2.5 0 0 0 14,22
+        <path class="settings-icon-wheel" d="M 10,2 L 14,2 A 2.5 2.5 0 0 0 18,4 L 20,6 A 2.5 2.5 0 0 0 22,10 L22,14 A 2.5 2.5 0 0 0 20,18 L 18,20 A 2.5 2.5 0 0 0 14,22
           L 10,22 A 2.5 2.5 0 0 0 6,20 L 4,18 A 2.5 2.5 0 0 0 2,14 L 2,10 A 2.5 2.5 0 0 0 4,6 L6,4 A 2.5 2.5 0 0 0 10,2 Z" />
       </svg>
     </button>
@@ -91,58 +91,112 @@
 
   <main>
     <dialog id="open-file-modal">
+      <div class="dialog-header">
+        <h2>Add From File</h2>
+        <button id="btn-file-cancel">Close</button>
+      </div>
+      <hr />
       <input id="file-input" type="file" accept=".json,application/json" />
       <button id="btn-file-accept">Accept</button>
-      <button id="btn-file-cancel">Cancel</button>
     </dialog>
 
     <dialog id="trash-modal">
+      <div class="dialog-header">
+        <h2>Trash</h2>
+        <button id="close-trash-modal">Close</button>
+      </div>
+      <hr />
       <p id="trash-message"></p>
-      <ul id="trash-list"></ul>
-      <button id="close-trash-modal">Close</button>
+      <ul id="trash-list" class="hide-style"></ul>
     </dialog>
 
     <dialog id="info-modal">
-      <button id="close-info-modal">close</button>
-      <h2>How to Use Sticky Notes</h2>
+      <div class="dialog-header">
+        <h2>About Sticky Notes</h2>
+        <button id="close-info-modal">close</button>
+      </div>
       <hr />
-      <section>
-        <h3>Creating Notes</h3>
-        <p>Clicking the add note button at the top of the screen will create a new note.</p>
-        <p>Click the note's fields to change the data.</p>
-        <p>Each note has a favorite button which will change it's background color to something more visible, and has a delete button which will remove it.</p>
-        <p>Notes can be repositioned by clicking and holding the colored bar at the top of the note and draging it to a new position</p>
-      </section>
-      <section>
-        <h3>Board Options</h3>
-        <p>You can change the name of your current board by clicking it's tilte on the header bar.</p>
-        <p>You will also want to click the save button in order for your notes contents to be saved to local storage.</p>
-        <p>If you want to back up your boards, you can download them as JSON files.</p>
-        <p>The hamburger menu at the top left of the screen allows you to create new moad</p>
-        <p>Backing up data</p>
-      </section>
-      <section>
-        <h3>Additional Settings</h3>
-        <p>Some of the following features are not yet implemented</p>
-        <dl>
-          <dt>Dark Mode</dt>
-          <dd>Clicking the top left button will toggle a dark background and light text, though the colors of the sticky notes will remain unchanged.</dd>
-          <dt>(TODO) Display Note Order</dt>
-          <dd>When this option is selected, the in which notes appear in thier list is displayed in the corner of the note. This can be inportant for tab order, and for which notes diplay on top of one another.</dd>
-          <dt>(TODO) Sticky Note Theme</dt>
-          <dd>Select a theme for the background colors of the sticky notes.</dd>
-          <dt>(TODO) </dt>
-          <dd></dd>
-        </dl>
-      </section>
+      <p>This Sticky Notes web app is designed as a visual organization tool with simple controls for simple tasks. There is no sign in, as all preferences and content are saved to local storage.</p>
+      <br />
+      <fieldset>
+        <legend>"How To" Guides</legend>
+        <details>
+          <summary>
+            <h3>Creating & Editing Notes</h3>
+          </summary>
+          <p>Clicking 'Add' buttons at the top of the screen will create Notes.</p>
+          <p>There are three types of notes currently supported:</p>
+          <dl>
+            <dt>Text</dt>
+            <dd>A plaintext note good for ideas, descriptions, and unformatted lists.</dd>
+            <dt>Checklist</dt>
+            <dd>Allows you to create a list of tasks, and check them off upon completition.</dd>
+            <dt>Image</dt>
+            <dd>Displays an image stored elsewhere on the internet via a given link.</dd>
+          </dl>
+          <p>You can click a note's fields to change its data with the exception of individual tasks within a checklist note.</p>
+          <p>Each note has a favorite button marked by a star (&#x2605;) which will change it's background color to something more visible and a delete button marked by an cross (&cross;) which will remove it from the noteboard.</p>
+          <p>Notes can be repositioned by clicking and dragging the colored bar at the top of the note and moving it to a new position. The board will automatically resize itself to contain all notes.</p>
+          <p class="warning">Make sure to click save when you're done making changes!</p>
+        </details>
+        <hr />
+        <details>
+          <summary>
+            <h3>Saving & Deleting</h3>
+          </summary>
+          <p>When you want to save your board, click the save icon, and the content of your board will be saved to your browser's local storage. It will not go anywhere besides the computer you are on, and you will not have access to it if you switch computers or browsers.</p>
+          <p>If you want to back up your boards so you can access them offline, on another machine, or between browsers, you can download them via the download icon.</p>
+          <p>Downloaded boards are JSON files, which means you can also edit and access them using text editors, though hanging the format of your files too much may prevent you from reuploading them.</p>
+          <p>To delete your board, click on the trash icon, and confirm you want to delete the board. Upon doing so, the board will be moved to a trash can and will no longer show up when navigating between boards.</p>
+          <p>Boards in the trashcan can either be restored or deleted permenantly.</p>
+        </details>
+        <hr />
+        <details>
+          <summary>
+            <h3>Making Additional Boards</h3>
+          </summary>
+          <p>If you run out of space on your board, or want to seperate your notes by topic, you can create additional boards.</p>
+          <p>The hamburger menu at the top left of the screen allows you to create a new board, or upload one you have saved in our format.</p>
+          <p class="warning">Make sure your current board is saved before leaving!</p>
+          <p>This menu will also allow you to navigate between your saved boards, and access your trash can for any you might delete.</p>
+          <p>You can change the name of your current board by clicking it's tilte on the header bar.</p>
+          <p>Make sure that any name you enter is unique, as it is what is used to specify where your notes are saved.</p>
+        </details>
+        <hr />
+        <details>
+          <summary>
+            <h3>Additional Settings</h3>
+          </summary>
+          <p>In the settings menu (the gear icon) there are a few settings that can change the user experience of the app, from how the sticky notes move, to the appearance of the notes and the app itself.</p>
+          <dl>
+            <dt>Toggle Dark/Light Mode</dt>
+            <dd>This button will toggle a dark background and light text, though the colors of the sticky notes will remain unchanged.</dd>
+            <dt>Display Note Order</dt>
+            <dd>When this option is selected, the order in which notes appear in thier list is displayed in the corner of the note. This order affects tab order, and which notes diplay on top of one another.</dd>
+            <dt>Grid Snapping</dt>
+            <dd>When toggled, notes will snap to a pixel grid when moved. This does not affect existing note placement.</dd>
+            <dt>Grid Size</dt>
+            <dd>If Grid Snapping is enabled, this setting controls the size of the grid and has a range of 5 &ndash; 25</dd>
+            <dt>Theme</dt>
+            <dd>Choose between various style sticky notes. Not effected by whether dark mode has been selected.</dd>
+          </dl>
+        </details>
+      </fieldset>
+      <br />
+      <p>The site is under development, and was last updated on November 2nd, 2025. Check out the <a href="https://github.com/luke-la/sticky-notes">GitHub</a> repository for more info.</p>
+      <p><small>Note: "Sticky Notes" is best used with a mouse and keyboard as repositioning the notes via touchscreen has not been accounted for in this version.</small></p>
     </dialog>
+    
 
     <dialog id="settings-modal">
-      <h2>Settings</h2>
+      <div class="dialog-header">
+        <h2>Settings</h2>
+        <button id="close-settings-modal">Close</button>
+      </div>
       <form>
         <fieldset>
           <legend>Display:</legend>
-          <ol>
+          <ol class="hide-style">
             <li>
               <span id="dark-mode-icon">
                 <svg width="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -184,7 +238,7 @@
         </fieldset>   
         <fieldset>
           <legend>Theme:</legend>
-          <ol>
+          <ol class="hide-style">
             <li>
               <input type="radio" id="theme-classic" name="theme" />
               <label for="theme-classic">Classic</label>
@@ -212,8 +266,8 @@
           </ol>
         </fieldset>
       </form>
+      <br />
       <button id="btn-reset-settings">Reset to Defaults</button>
-      <button id="close-settings-modal">Close</button>
     </dialog>
     
     <template id="note-template">

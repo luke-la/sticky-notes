@@ -21,7 +21,8 @@
   color: black;
   box-shadow: 2px 2px 4px 2px #0005;
   border: 2px solid transparent;
-  max-width: 400px;
+  width: 385px;
+  z-index: 1;
 }
 
 .note.favorite {
@@ -105,22 +106,35 @@
   padding: 0;
 }
 
-.note input[type="checkbox"] {
-  accent-color: black;
-  margin: 0.5rem 1rem;
+.note li {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  gap: 0.5rem;
+  margin: 0.5rem;
+  border-bottom: 1px dashed black;
 }
 
-.note input[type="checkbox"]:checked + label {
+.note li input[type="checkbox"] {
+  accent-color: black;
+}
+
+.note li input[type="checkbox"]:checked + label {
   text-decoration: line-through solid currentColor;
 }
 
-.note input[name="Add Checklist Item"] {
+.note li input[type="checkbox"]:hover,
+.note li input[type="checkbox"]:focus-visible {
+  outline: 2px solid black;
+  outline-offset: 2px
+}
+
+.note li input[name="Add Checklist Item"] {
   width: 25ch
 }
 
 .note img {
   display: block;
-  width: 100%;
+  max-width: 100%
 }
 
 .note input[name="Image Url Input"] {
