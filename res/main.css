@@ -2,15 +2,15 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --near-base: hsl(0, 0%, 95%);
-    --base: hsl(0, 0%, 87%);
+    --base: hsl(0, 0%, 95%);
+    --near-base: hsl(0, 0%, 87%);
     --primary-text: hsl(210, 7%, 7%);
     --secondary: hsl(210, 5%, 25%);
   }
 
   .dark {
-    --near-base: hsl(210, 7%, 10%);
-    --base: hsl(210, 5%, 15%);
+    --base: hsl(210, 7%, 10%);
+    --near-base: hsl(210, 5%, 15%);
     --primary-text: hsl(0, 0%, 90%);
     --secondary: hsl(0, 0%, 75%);
   }
@@ -26,17 +26,17 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --near-base: hsl(210, 7%, 10%);
-    --base: hsl(210, 5%, 15%);
+    --base: hsl(210, 7%, 10%);
+    --near-base: hsl(210, 5%, 15%);
     --primary-text: hsl(0, 0%, 90%);
     --secondary: hsl(0, 0%, 75%);
   }
 
   .dark {
-    --near-base: hsl(0, 0%, 95%);
-    --base: hsl(0, 0%, 87%);
+    --base: hsl(0, 0%, 95%);
+    --near-base: hsl(0, 0%, 87%);
     --primary-text: hsl(210, 7%, 7%);
-    --secondary: hsl(210, 5%, 30%);
+    --secondary: hsl(210, 5%, 25%);
   }
 
   #dark-mode-icon > :first-child,
@@ -50,7 +50,7 @@
 }
 
 body {
-  background-color: var(--near-base);
+  background-color: var(--base);
   color: var(--primary-text);
   font: 1rem monospace;
 }
@@ -64,10 +64,11 @@ body {
 
 dialog {
   max-width: 70ch;
+  min-width: 35ch;
   max-height: 80%;
   padding: 2rem;
   border: none;
-  background-color: var(--base);
+  background-color: var(--near-base);
   color: var(--primary-text);
   font-size: 1rem;
 }
@@ -92,6 +93,7 @@ hr {
 
 fieldset {
   border: 1px solid var(--primary-text);
+  background-color: var(--base);
 }
 
 header {
@@ -105,7 +107,7 @@ header {
   gap: 1rem;
   align-items: center;
   padding: 0.5rem;
-  background-color: var(--base);
+  background-color: var(--near-base);
 }
 
 button {
@@ -115,7 +117,7 @@ button {
   align-items: center;
 
   border-radius: 1rem;
-  background-color: var(--base);
+  background-color: var(--near-base);
   color: var(--primary-text);
   font-weight: bold;
   font-family: inherit;
@@ -174,6 +176,36 @@ dl {
   padding-inline: 2.5rem;
 }
 
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-bottom: 1rem;
+}
+
+summary {
+  margin-block: 1rem;
+}
+
+summary > h3 {
+  display: inline;
+  padding-left: 1rem;
+}
+
+.warning {
+  display: block;
+  padding: 0.5rem 2rem;
+  margin: 1rem;
+
+  
+  font-weight: bold;
+  text-align: center;
+  border: 2px solid var(--primary-text);
+  border-radius: 1rem;
+}
+
+
 /* icon animations */
 
 svg {
@@ -224,7 +256,7 @@ svg {
 
 #boards-list {
   position: fixed;
-  background-color: var(--base);
+  background-color: var(--near-base);
   top: 56px;
   left: 0;
   z-index: 250;
