@@ -431,12 +431,43 @@ btnResetSettings.onclick = function () {
     if (theme.id == noteTheme) theme.checked = true
   })
 }
+
 // open/close settings modal
 document.getElementById("btn-settings").onclick = function () {
   document.getElementById('settings-modal').showModal()
 }
 document.getElementById("close-settings-modal").onclick = function() {
   document.getElementById('settings-modal').close()
+}
+
+// populate checkbox item edit modal
+const itemEditModal = document.getElementById("item-edit-modal")
+const itemEditInput = document.getElementById("item-edit-input")
+const btnItemEditAccept = document.getElementById("btn-item-edit-accept")
+const btnItemEditCancel = document.getElementById("btn-item-edit-cancel")
+let labelCurrentlyEditing
+function showItemEditModal(label) {
+  labelCurrentlyEditing = label
+  itemEditInput.value = label.innerText
+  itemEditModal.showModal()
+}
+
+itemEditInput.oninput = function() {
+  var invalid = (
+    itemEditInput.value == labelCurrentlyEditing.textContent || 
+    itemEditInput.value == "" ||
+    itemEditInput.value.length > itemEditInput.maxlength
+  )
+  btnItemEditAccept.disabled = invalid
+}
+
+btnItemEditAccept.onclick = function() {
+  labelCurrentlyEditing.textContent = itemEditInput.value
+  itemEditModal.close()
+}
+
+btnItemEditCancel.onclick = function() {
+  itemEditModal.close()
 }
 
 function deleteBoard(board, item) {

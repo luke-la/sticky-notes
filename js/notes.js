@@ -151,7 +151,7 @@ function addNote(note = null, type = null) {
     addItemInput.name = "Add Checklist Item"
     addItemInput.placeholder = "Enter task..."
     addItemInput.type = "text"
-    addItemInput.maxLength = 25
+    addItemInput.maxLength = 30
     addItemInput.autocomplete = "off"
 
     addItemButton.textContent = "+"
@@ -161,6 +161,7 @@ function addNote(note = null, type = null) {
       addItemInput.value = null
       note.content = JSONList(noteList)
       setSaveStatus()
+      addItemInput.focus()
     }
 
     function JSONList(ul) {
@@ -179,8 +180,9 @@ function addNote(note = null, type = null) {
       const listItem = document.createElement("li");
       const ckb = document.createElement("input")
       const desc = document.createElement("label")
+      const btnEdit = document.createElement("button")
       const btnRemove = document.createElement("button")
-      listItem.append(ckb, desc, btnRemove);
+      listItem.append(ckb, desc, btnEdit, btnRemove);
 
       if (indexID) ckb.id = note.id + "-ckb-" + indexID
       else ckb.id = note.id + "-ckb-" + Date.now()
@@ -193,6 +195,11 @@ function addNote(note = null, type = null) {
 
       desc.setAttribute("for", ckb.id)
       desc.textContent = content
+
+      btnEdit.textContent = "edit"
+      btnEdit.onclick = function () {
+        showItemEditModal(desc)
+      }
 
       btnRemove.textContent = "X"
       btnRemove.onclick = function () {

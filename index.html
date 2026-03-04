@@ -134,7 +134,7 @@
             <dt>Image</dt>
             <dd>Displays an image stored elsewhere on the internet via a given link.</dd>
           </dl>
-          <p>You can click a note's fields to change its data with the exception of individual tasks within a checklist note.</p>
+          <p>You can click a note's fields to change its data with the exception of individual tasks within a checklist note, which are instead changed via the edit button to the right of the text.</p>
           <p>Each note has a favorite button marked by a star (&#x2605;) which will change it's background color to something more visible and a delete button marked by an cross (&cross;) which will remove it from the noteboard.</p>
           <p>Notes can be repositioned by clicking and dragging the colored bar at the top of the note and moving it to a new position. The board will automatically resize itself to contain all notes.</p>
           <p class="warning">Make sure to click save when you're done making changes!</p>
@@ -186,7 +186,6 @@
       <p>The site is under development, and was last updated on November 2nd, 2025. Check out the <a href="https://github.com/luke-la/sticky-notes">GitHub</a> repository for more info.</p>
       <p><small>Note: "Sticky Notes" is best used with a mouse and keyboard as repositioning the notes via touchscreen has not been accounted for in this version.</small></p>
     </dialog>
-    
 
     <dialog id="settings-modal">
       <div class="dialog-header">
@@ -268,6 +267,16 @@
       </form>
       <br />
       <button id="btn-reset-settings">Reset to Defaults</button>
+    </dialog>
+
+    <dialog id="item-edit-modal">
+      <div class="dialog-header">
+        <h2>Edit Checklist Item</h2>
+      </div>
+      <hr />
+      <input id="item-edit-input" type="text" autocomplete="off" maxlength="30"/>
+      <button id="btn-item-edit-accept">Accept</button>
+      <button id="btn-item-edit-cancel">Cancel</button>
     </dialog>
     
     <template id="note-template">
