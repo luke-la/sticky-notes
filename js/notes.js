@@ -11,8 +11,8 @@ class Note {
     this.content = ""
     this.fav = false
     this.position = {
-      x: 100,
-      y: 100,
+      x: 0,
+      y: 0,
     }
   }
 }
@@ -23,6 +23,9 @@ function addNote(note = null, type = null) {
   if (note == null) {
     note = new Note()
     note.type = type
+    const posX = document.documentElement.clientWidth / 2 + document.documentElement.scrollLeft
+    const posY = document.documentElement.clientHeight / 2 + document.documentElement.scrollTop
+    note.position = { x: posX - 210, y: posY - 120}
     notes.push(note)
     setSaveStatus()
   }
@@ -153,9 +156,18 @@ function addNote(note = null, type = null) {
     addItemInput.type = "text"
     addItemInput.maxLength = 30
     addItemInput.autocomplete = "off"
+    // enter listener code from: https://stackoverflow.com/questions/12955222/how-do-i-trigger-an-html-button-when-the-enter-key-is-pressed-in-a-textbox
+    addItemInput.addEventListener("keyup", event => {
+      console.log(event.key)
+      if(event.key !== "Enter") return;
+      AddItem()
+      event.preventDefault();
+    });
 
     addItemButton.textContent = "+"
-    addItemButton.onclick = function () {
+    addItemButton.onclick = AddItem
+
+    function AddItem() {
       if (!addItemInput.value || addItemInput.value.length < 1) return
       createListItem(addItemInput.value)
       addItemInput.value = null

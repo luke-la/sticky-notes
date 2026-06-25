@@ -270,6 +270,11 @@ svg {
   gap: 1rem;
   justify-content: center;
   align-items: baseline;
+  pointer-events: none;
+}
+
+#toolbar > * {
+  pointer-events: all;
 }
 
 #boards-list {
